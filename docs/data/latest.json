@@ -1,13 +1,16 @@
 {
-  "date": null,
-  "time": null,
-  "type": null,
-  "type_label": null,
-  "kospi": null,
-  "ma50": null,
-  "disparity": null,
-  "zone": null,
-  "zone_label": null,
-  "note": "첫 데이터 갱신 대기 중입니다. GitHub Actions 워크플로를 실행하면 채워집니다.",
-  "updated_at": null
+  "date": "2026-06-10",
+  "time": "16:33",
+  "type": "close",
+  "type_label": "종가 확정",
+  "kospi": 7730.82,
+  "ma50": 6857.56,
+  "disparity": 112.73,
+  "change": 246.41,
+  "change_pct": 3.29,
+  "prev_disparity": 109.81,
+  "zone": "normal",
+  "zone_label": "정상 범위",
+  "note": "장 마감 종가 기준 확정값입니다.",
+  "updated_at": "2026-06-10T16:33:05+09:00"
 }
