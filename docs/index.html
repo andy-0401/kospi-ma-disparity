@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>코스피 50일 이격도 · 이그전 트래커</title>
+<meta name="description" content="이은택의 그림전략(이그전) 50일 이격도 이론에 기반한 코스피 과열/과열해소 실시간 트래킹. 매일 장중·종가 갱신." />
+<meta property="og:title" content="코스피 50일 이격도 · 이그전 트래커" />
+<meta property="og:description" content="코스피 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%)" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo">📊</span>
+      <div>
+        <h1>코스피 50일 이격도</h1>
+        <p class="sub">이그전(이은택의 그림전략) 기반 과열 트래커</p>
+      </div>
+    </div>
+    <a class="tg" id="tgLink" href="#" target="_blank" rel="noopener" hidden>📨 텔레그램 채널</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 현재 상황 카드 -->
+  <section class="hero card" id="heroCard">
+    <div class="hero-left">
+      <div class="badge-row">
+        <span class="type-badge" id="typeBadge">—</span>
+        <span class="ts" id="updatedAt">불러오는 중…</span>
+      </div>
+      <div class="disp" id="dispBig">--<span class="pct">%</span></div>
+      <div class="zone" id="zoneLabel">데이터 준비 중</div>
+      <div class="disp-delta" id="dispDelta"></div>
+    </div>
+    <div class="hero-right">
+      <div class="stat">
+        <span class="k">코스피</span>
+        <span class="v" id="kospiVal">—</span>
+        <span class="chg" id="kospiChg"></span>
+      </div>
+      <div class="stat">
+        <span class="k">50일 이동평균</span>
+        <span class="v" id="ma50Val">—</span>
+      </div>
+      <div class="stat">
+        <span class="k">공식</span>
+        <span class="v small">현재가 ÷ 50일선 × 100</span>
+      </div>
+      <div class="note" id="note"></div>
+    </div>
+  </section>
+
+  <!-- 게이지/구간 바 -->
+  <section class="card gauge-card">
+    <div class="gauge-track">
+      <div class="seg cooldown" style="flex:0 0 18%">≤105 과열해소</div>
+      <div class="seg normal"   style="flex:0 0 42%">105–120 정상</div>
+      <div class="seg caution"  style="flex:0 0 20%">120–130 경계</div>
+      <div class="seg overheat" style="flex:0 0 20%">≥130 과열</div>
+      <div class="marker" id="gaugeMarker" hidden><span class="dot"></span><span class="mlabel" id="gaugeLabel"></span></div>
+    </div>
+  </section>
+
+  <!-- 차트: 코스피 vs 50일선 -->
+  <section class="card">
+    <div class="card-head">
+      <h2>코스피 & 50일 이동평균</h2>
+      <div class="range-btns" id="rangeBtns">
+        <button data-r="60">3M</button>
+        <button data-r="120">6M</button>
+        <button data-r="250" class="on">1Y</button>
+        <button data-r="0">All</button>
+      </div>
+    </div>
+    <div class="chart-box"><canvas id="priceChart"></canvas></div>
+  </section>
+
+  <!-- 차트: 이격도 -->
+  <section class="card">
+    <div class="card-head">
+      <h2>50일 이격도 추이</h2>
+      <span class="legend-hint">🔴 130 과열 · 🔵 105 과열해소</span>
+    </div>
+    <div class="chart-box"><canvas id="dispChart"></canvas></div>
+  </section>
+
+  <!-- 이그전 이론 설명 -->
+  <section class="card theory">
+    <h2>이그전 50일 이격도 해석법</h2>
+    <p><b>이격도 = 현재가 ÷ 50일 이동평균 × 100.</b> 현재 주가가 최근 50거래일 평균 대비 얼마나 위/아래에 있는지를 나타냅니다. 한국의 초강세장은 50일선을 지지받으며 상승하는 경향이 있습니다.</p>
+    <ul class="theory-list">
+      <li><span class="tag overheat">≥ 130%</span> 과열권 진입 — 추격매수(Panic Buying) 자제</li>
+      <li><span class="tag caution">120–130%</span> 과열 경계 — 분할·속도조절 관심</li>
+      <li><span class="tag normal">105–120%</span> 정상 범위 — 추세 추종 유효</li>
+      <li><span class="tag cooldown">≤ 105%</span> 과열 해소 — 투매(Panic Selling) 자제, 이격조정 끝난 업종부터 매수</li>
+    </ul>
+    <p class="muted">※ 130/110/105를 칼같이 자르지 않고 그때 상황에 맞춰 미세조정해 봅니다. 출처: 이그전(이은택의 그림전략). 본 사이트는 정보 제공용이며 투자 권유가 아닙니다.</p>
+  </section>
+
+  <!-- 히스토리 테이블 -->
+  <section class="card">
+    <div class="card-head"><h2>최근 기록</h2></div>
+    <div class="table-box">
+      <table id="histTable">
+        <thead><tr><th>날짜</th><th>코스피</th><th>50일선</th><th>이격도</th><th>구간</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot wrap">
+  <p>데이터: 무료 공개 소스(KRX/pykrx · Naver/Yahoo) · 갱신: 매 거래일 12:00 / 15:40 KST</p>
+  <p class="muted">© 코스피 50일 이격도 트래커 · 이그전 이론 기반 · 투자 판단의 책임은 본인에게 있습니다.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="./app.js" defer></script>
+</body>
+</html>
