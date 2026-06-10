@@ -1,0 +1,81 @@
+name: 코스피 50일 이격도 갱신
+
+on:
+  schedule:
+    # GitHub Actions cron 은 UTC 기준. KST = UTC+9.
+    - cron: "0 3 * * 1-5"    # 12:00 KST — 장중 속보(intraday)
+    - cron: "40 6 * * 1-5"   # 15:40 KST — 종가 확정(close)
+  workflow_dispatch:
+    inputs:
+      type:
+        description: "갱신 유형"
+        type: choice
+        default: close
+        options: [close, intraday]
+      force:
+        description: "비거래일에도 강제 실행"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: disparity-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Determine run type
+        id: cfg
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TYPE="${{ inputs.type }}"
+            FORCE="${{ inputs.force }}"
+          elif [ "${{ github.event.schedule }}" = "40 6 * * 1-5" ]; then
+            TYPE="close"; FORCE="false"
+          else
+            TYPE="intraday"; FORCE="false"
+          fi
+          echo "type=$TYPE" >> "$GITHUB_OUTPUT"
+          echo "force=$FORCE" >> "$GITHUB_OUTPUT"
+          echo "선택된 유형: $TYPE (force=$FORCE)"
+
+      - name: Run update
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WEB_URL: ${{ vars.WEB_URL }}
+        run: |
+          ARGS="--type ${{ steps.cfg.outputs.type }}"
+          if [ "${{ steps.cfg.outputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
+          python scripts/run_update.py $ARGS
+
+      - name: Commit data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/history.json docs/data/latest.json
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "data: ${{ steps.cfg.outputs.type }} 이격도 갱신 ($(date -u +%Y-%m-%dT%H:%MZ))"
+            for i in 1 2 3 4; do
+              git push origin HEAD:${{ github.ref_name }} && break
+              echo "push 재시도 $i..."; sleep $((2**i))
+            done
+          fi
