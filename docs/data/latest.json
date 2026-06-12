@@ -1,16 +1,16 @@
 {
-  "date": "2026-06-10",
-  "time": "16:33",
-  "type": "close",
-  "type_label": "종가 확정",
-  "kospi": 7730.82,
-  "ma50": 6857.56,
-  "disparity": 112.73,
-  "change": 246.41,
-  "change_pct": 3.29,
-  "prev_disparity": 109.81,
+  "date": "2026-06-12",
+  "time": "23:18",
+  "type": "intraday",
+  "type_label": "장중 속보",
+  "kospi": 8123.62,
+  "ma50": 7013.72,
+  "disparity": 115.82,
+  "change": -0.0,
+  "change_pct": -0.0,
+  "prev_disparity": 115.82,
   "zone": "normal",
   "zone_label": "정상 범위",
-  "note": "장 마감 종가 기준 확정값입니다.",
-  "updated_at": "2026-06-10T16:33:05+09:00"
+  "note": "정규장 중 실시간 현재가 기준 추정치입니다(종가 확정 시 갱신).",
+  "updated_at": "2026-06-12T23:18:10+09:00"
 }
