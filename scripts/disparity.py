@@ -244,8 +244,9 @@ def build_snapshot(history: list[DailyPoint], run_type: str) -> Snapshot:
         disparity = last.disparity
         prev_close = prev.close if prev else None
         prev_disp = prev.disparity if prev else None
-        type_label = "종가 확정"
+        type_label = "updated"
         date_str = last.date
+        time_str = "15:40"
         note = "장 마감 종가 기준 확정값입니다."
     else:  # intraday
         # 마지막 확정 종가들로 MA50 (오늘 미포함)
@@ -256,8 +257,9 @@ def build_snapshot(history: list[DailyPoint], run_type: str) -> Snapshot:
         disparity = round(kospi / ma50 * 100.0, 2)
         prev_close = last.close          # 직전 거래일 종가
         prev_disp = last.disparity
-        type_label = "장중 속보"
+        type_label = "updated"
         date_str = now.strftime("%Y-%m-%d")
+        time_str = "12:00"
         note = "정규장 중 실시간 현재가 기준 추정치입니다(종가 확정 시 갱신)."
 
     zone, zone_label = classify(disparity)
@@ -266,7 +268,7 @@ def build_snapshot(history: list[DailyPoint], run_type: str) -> Snapshot:
 
     return Snapshot(
         date=date_str,
-        time=now.strftime("%H:%M"),
+        time=time_str,
         type=run_type,
         type_label=type_label,
         kospi=round(kospi, 2),
@@ -278,7 +280,7 @@ def build_snapshot(history: list[DailyPoint], run_type: str) -> Snapshot:
         zone=zone,
         zone_label=zone_label,
         note=note,
-        updated_at=now.isoformat(timespec="seconds"),
+        updated_at=f"{date_str}T{time_str}:00+09:00",
     )
 
 
