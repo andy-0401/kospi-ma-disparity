@@ -9,6 +9,26 @@
 <meta property="og:description" content="코스피 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%)" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="./styles.css" />
+
+<!-- 사이트 설정 (채널 링크 / GA4 ID) -->
+<script src="./config.js"></script>
+<!-- Google Analytics 4 : config.gaMeasurementId 가 있을 때만 로드 (PV/UV/유입경로 자동 수집) -->
+<script>
+(function () {
+  var cfg = window.SITE_CONFIG || {};
+  var id = cfg.gaMeasurementId;
+  if (!id) return;
+  var s = document.createElement("script");
+  s.async = true;
+  s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag("js", new Date());
+  // anonymize_ip: 개인정보 보호(IP 익명화)
+  window.gtag("config", id, { anonymize_ip: true });
+})();
+</script>
 </head>
 <body>
 <header class="topbar">

@@ -6,8 +6,13 @@
   // 게이지 매핑 범위 (95 ~ 140%)
   const GMIN = 95, GMAX = 140;
 
-  // 텔레그램 채널 링크(원하는 핸들로 교체)
-  const TELEGRAM_URL = ""; // 예: "https://t.me/your_channel"
+  // 텔레그램 채널 링크: docs/config.js 에서 주입 (없으면 버튼 숨김)
+  const TELEGRAM_URL = (window.SITE_CONFIG && window.SITE_CONFIG.telegramUrl) || "";
+
+  // GA4 이벤트 헬퍼 (gtag 없으면 무시)
+  const track = (name, params) => {
+    if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+  };
 
   const $ = (id) => document.getElementById(id);
   const fmt = (n, d = 2) =>
@@ -23,7 +28,12 @@
   let priceChart, dispChart, HISTORY = [];
 
   async function load() {
-    if (TELEGRAM_URL) { const l = $("tgLink"); l.href = TELEGRAM_URL; l.hidden = false; }
+    if (TELEGRAM_URL) {
+      const l = $("tgLink");
+      l.href = TELEGRAM_URL;
+      l.hidden = false;
+      l.addEventListener("click", () => track("telegram_click", { url: TELEGRAM_URL }));
+    }
     const [hist, latest] = await Promise.all([
       fetchJSON("./data/history.json"),
       fetchJSON("./data/latest.json"),
@@ -184,6 +194,7 @@
       [...box.children].forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
       buildPriceChart(+b.dataset.r);
+      track("range_change", { range: b.dataset.r });
     });
   }
 
