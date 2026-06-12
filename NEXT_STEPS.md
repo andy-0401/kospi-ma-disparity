@@ -2,6 +2,20 @@
 
 이어서 작업할 항목 모음. 각 항목은 **무엇을 / 어디를 / 어떻게** 순으로 정리.
 
+## 🎯 지금 이어서 할 일 (2026-06-12 기준)
+- **#3 디자인 미세조정** — 색/레이아웃/임계값. (아래 3번 섹션 참고)
+- **#4 트래킹 후속** — UTM 캘페인 링크 정리, (추후)광고·동의배너. (아래 4번 섹션 참고)
+- 보류: **#1 텔레그램 자동알림** — 나중에. (코드는 완성, 시크릿만 넣으면 됨)
+
+## ✅ 추가 완료 (2026-06-12)
+- **#2 헤더 채널 버튼 — 완료/라이브.** 헤더 "📨 텔레그램 채널" → https://t.me/andyc14note
+- **#4 유저 트래킹(GA4) — 기본 완료/라이브.** 측정 ID `G-B8M3849G0G` 활성, 실시간 수집 확인됨.
+  - 설정은 `docs/config.js` 한 곳: `telegramUrl`, `gaMeasurementId`
+  - 자동 이벤트: 채널 클릭 `telegram_click`, 차트 기간전환 `range_change` (`docs/app.js`의 `track()`)
+  - **채널 공유용 UTM 링크**(이걸로 올려야 GA가 유입원=telegram 으로 집계):
+    - 런칭: `https://andy-0401.github.io/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=launch`
+    - 매일: `https://andy-0401.github.io/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=daily`
+
 ## ✅ 현재까지 완료 (2026-06-10)
 - 50일 이격도 계산 엔진 (`scripts/disparity.py`) — pykrx/Naver/Yahoo 무료 데이터 + 폴백
 - 갱신 파이프라인 (`scripts/run_update.py`) → `docs/data/history.json`, `docs/data/latest.json`
@@ -18,7 +32,7 @@
 
 ---
 
-## 1) 텔레그램 자동 알림 켜기  ⏱️ 가장 쉬움 / 효과 큼
+## 1) 텔레그램 자동 알림 켜기  ⏱️ 가장 쉬움 / 효과 큼  — ⏸️ 보류(나중에)
 **무엇:** 코드(`telegram_notify.py`)는 이미 완성. GitHub Secrets만 넣으면 다음 실행부터 채널 broadcast.
 
 **어디:** Settings → Secrets and variables → Actions
@@ -41,17 +55,13 @@
 
 ---
 
-## 2) 페이지 헤더에 텔레그램 채널 링크 버튼 노출  ⏱️ 5분
-**무엇:** 헤더 우측 "📨 텔레그램 채널" 버튼. 지금은 URL이 비어 있어 숨김(`hidden`) 상태.
+## 2) 페이지 헤더에 텔레그램 채널 링크 버튼 노출  — ✅ 완료/라이브
+**무엇:** 헤더 우측 "📨 텔레그램 채널" 버튼 → `https://t.me/andyc14note` 연결됨.
 
-**어디:** `docs/app.js` 상단 상수
-```js
-const TELEGRAM_URL = ""; // → "https://t.me/<채널핸들>" 로 교체
-```
-값을 채우면 `load()`에서 자동으로 버튼 표시(`#tgLink`).
+**어디(현재 구조):** `docs/config.js` 의 `telegramUrl` 값으로 주입.
+`docs/app.js`가 `window.SITE_CONFIG.telegramUrl`을 읽어 버튼 표시(`#tgLink`) + 클릭 시 GA 이벤트.
 
-**어떻게:** 채널 주소 한 줄 교체 → 커밋 → Pages 자동 재배포.
-(원하면 `WEB_URL`처럼 repo Variable로 빼서 빌드시 주입하도록 바꿔도 됨.)
+**바꾸려면:** `docs/config.js`의 `telegramUrl` 한 줄만 수정 → 커밋 → Pages 자동 재배포.
 
 ---
 
@@ -76,10 +86,16 @@ const TELEGRAM_URL = ""; // → "https://t.me/<채널핸들>" 로 교체
 
 ---
 
-## 4) 유저 트래킹 (PV/UV/유입경로) → 추후 광고
-**무엇:** 방문자수(PV/UV), 유입경로(referrer/UTM) 수집. 추후 광고 수익화 대비.
+## 4) 유저 트래킹 (PV/UV/유입경로) → 추후 광고  — ✅ GA4 기본 완료 / 후속 작업 남음
+**현재 상태:** GA4(`G-B8M3849G0G`) `docs/index.html` `<head>`에 배선됨(`docs/config.js`의
+`gaMeasurementId`로 주입, IP 익명화). 실시간 수집 확인 완료. PV/UV/유입경로/기기/지역 자동 집계.
 
-**어디:** `docs/index.html` `<head>` 에 분석 스니펫 1개 삽입 (정적 사이트라 클라이언트 태그 방식).
+**후속 할 일(택):**
+- 채널 글마다 캘페인 구분 UTM 링크 발급(위 launch/daily 외 주제별 추가).
+- 커스텀 이벤트 추가(예: 구간 진입 강조 클릭, 외부링크). `docs/app.js`의 `track()` 활용.
+- 광고 전에 **개인정보처리방침 + 쿠키 동의 배너**(아래 광고 항목).
+
+**참고(원리):** 정적 사이트라 클라이언트 태그 방식. `<head>`에 분석 스니펫 1개 삽입.
 
 **옵션 비교:**
 | 도구 | 비용 | 특징 | 광고 연계 |
@@ -114,5 +130,5 @@ cd docs && python -m http.server 8000   # http://localhost:8000
 # 워크플로 수동 실행: GitHub → Actions → "코스피 50일 이격도 갱신" → Run workflow
 ```
 
-## 우선순위 제안
-1 (텔레그램) → 2 (링크버튼) → 4 (GA4 트래킹, 광고 전 데이터 축적 시작) → 3 (디자인/임계값)
+## 우선순위 제안 (갱신: 2026-06-12)
+2·4 기본 완료 ✅ → **다음: 3 (디자인/임계값) + 4 후속(UTM 캘페인·동의배너) → 광고 → 1(텔레그램)**
