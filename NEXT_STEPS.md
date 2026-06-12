@@ -12,9 +12,12 @@
 - **#4 유저 트래킹(GA4) — 기본 완료/라이브.** 측정 ID `G-B8M3849G0G` 활성, 실시간 수집 확인됨.
   - 설정은 `docs/config.js` 한 곳: `telegramUrl`, `gaMeasurementId`
   - 자동 이벤트: 채널 클릭 `telegram_click`, 차트 기간전환 `range_change` (`docs/app.js`의 `track()`)
-  - **채널 공유용 UTM 링크**(이걸로 올려야 GA가 유입원=telegram 으로 집계):
-    - 런칭: `https://andy-0401.github.io/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=launch`
-    - 매일: `https://andy-0401.github.io/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=daily`
+  - **채널 공유용 단축 링크**(쿼리스트링 숨김 + GA 유입원=telegram 집계). 이걸 공유하면 됨:
+    - 런칭: `https://andy-0401.github.io/kospi-ma-disparity/launch`
+    - 매일: `https://andy-0401.github.io/kospi-ma-disparity/daily`
+    - 원리: `docs/launch/`·`docs/daily/`의 한 줄짜리 리다이렉트 페이지가 아래 풀 UTM 으로 즉시 전달.
+    - (풀 UTM 원본) `…/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=launch`(또는 `=daily`)
+    - 더 짧게(`bit.ly/…` 등 도메인까지 줄이려면) 외부 단축 서비스에 위 단축 링크를 한 번 더 통과시키면 됨.
 
 ## ✅ 현재까지 완료 (2026-06-10)
 - 50일 이격도 계산 엔진 (`scripts/disparity.py`) — pykrx/Naver/Yahoo 무료 데이터 + 폴백

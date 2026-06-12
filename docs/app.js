@@ -24,6 +24,8 @@
     if (v <= COOLDOWN) return ["cooldown", "과열 해소 (Panic Selling 자제)"];
     return ["normal", "정상 범위"];
   }
+  // 테이블/배지용 짧은 구간 라벨 (서로 구분되게)
+  const ZONE_SHORT = { overheat: "과열", caution: "경계", normal: "정상", cooldown: "과열해소" };
 
   let priceChart, dispChart, HISTORY = [];
 
@@ -69,10 +71,12 @@
     const [zk] = zoneOf(s.disparity);
 
     const badge = $("typeBadge");
-    badge.textContent = s.type_label || (s.type === "close" ? "종가 확정" : "장중 속보");
+    badge.textContent = "updated";
     badge.className = "type-badge " + (s.type || "");
 
-    $("updatedAt").textContent = `${s.date} ${s.time} KST`;
+    // 기준 시각은 갱신 스케줄(장중 12:00 / 종가 15:40)로 고정 표시
+    const refTime = s.type === "close" ? "15:40" : "12:00";
+    $("updatedAt").textContent = `${s.date} ${refTime} 기준`;
     $("dispBig").innerHTML = `${fmt(s.disparity, 1)}<span class="pct">%</span>`;
 
     const zl = $("zoneLabel");
@@ -202,13 +206,13 @@
     const tb = $("histTable").querySelector("tbody");
     const rows = HISTORY.slice(-30).reverse();
     tb.innerHTML = rows.map((d) => {
-      const [zk, zl] = zoneOf(d.disparity);
+      const [zk] = zoneOf(d.disparity);
       return `<tr>
-        <td>${d.date}</td>
-        <td>${fmt(d.close)}</td>
-        <td>${fmt(d.ma50)}</td>
-        <td><b>${fmt(d.disparity, 1)}%</b></td>
-        <td><span class="pill ${zk}">${zl.split(" ")[0]}</span></td>
+        <td class="c-date">${d.date}</td>
+        <td class="c-kospi">${fmt(d.close)}</td>
+        <td class="c-ma50">${fmt(d.ma50)}</td>
+        <td class="c-disp"><b>${fmt(d.disparity, 1)}%</b></td>
+        <td class="c-zone"><span class="pill ${zk}">${ZONE_SHORT[zk]}</span></td>
       </tr>`;
     }).join("");
   }

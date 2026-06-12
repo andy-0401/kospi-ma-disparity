@@ -3,6 +3,7 @@
   --txt:#e7edf6; --muted:#8b97aa; --accent:#3b82f6;
   --overheat:#ef4444; --caution:#f59e0b; --normal:#22c55e; --cooldown:#3b82f6;
   --up:#ef4444; --down:#3b82f6;
+  --tg:#229ED9;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -17,13 +18,19 @@ a{color:var(--accent);text-decoration:none}
 
 /* Topbar */
 .topbar{border-bottom:1px solid var(--line);background:#0b0f17cc;backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
-.topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand .logo{font-size:26px}
-.brand h1{font-size:18px;margin:0;letter-spacing:-.3px}
-.brand .sub{margin:0;font-size:12px;color:var(--muted)}
-.tg{font-size:13px;border:1px solid var(--line);padding:7px 12px;border-radius:999px;color:var(--txt)}
-.tg:hover{border-color:var(--accent)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:11px;padding-bottom:11px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand .logo{font-size:26px;flex:0 0 auto}
+.brand h1{font-size:18px;margin:0;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .sub{margin:1px 0 0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Telegram button */
+.tg{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
+  font-size:14px;font-weight:600;color:#fff;background:var(--tg);border:none;
+  padding:6px 12px;border-radius:999px;box-shadow:0 2px 10px #229ed94d;transition:background .15s,transform .15s}
+.tg:hover{background:#1b8ec4;color:#fff}
+.tg:active{transform:scale(.97)}
+.tg svg{flex:0 0 auto;display:block;width:18px;height:18px}
 
 /* Cards */
 .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0;box-shadow:0 6px 24px #00000033}
@@ -55,14 +62,33 @@ a{color:var(--accent);text-decoration:none}
 .up{color:var(--up)} .down{color:var(--down)}
 
 /* Gauge */
-.gauge-card{padding:16px 18px}
-.gauge-track{position:relative;display:flex;height:38px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
-.seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#0b0f17;white-space:nowrap;padding:0 2px}
-.seg.cooldown{background:#3b82f6} .seg.normal{background:#22c55e}
-.seg.caution{background:#f59e0b} .seg.overheat{background:#ef4444}
-.marker{position:absolute;top:-6px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left .5s ease}
-.marker .dot{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #0b0f17;box-shadow:0 0 0 2px #fff}
-.marker .mlabel{margin-top:50px;font-size:11px;font-weight:800;background:#0b0f17;border:1px solid var(--line);padding:2px 6px;border-radius:6px;white-space:nowrap}
+.gauge-card{padding:18px}
+.gauge-wrap{position:relative;padding-top:30px}
+.gauge-track{position:relative;display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.seg{height:100%}
+.seg.cooldown{flex:0 0 22.222%;background:var(--cooldown)}
+.seg.normal{flex:0 0 33.333%;background:var(--normal)}
+.seg.caution{flex:0 0 22.222%;background:var(--caution)}
+.seg.overheat{flex:0 0 22.222%;background:var(--overheat)}
+/* marker (current value) — bubble above the bar, triangle points down */
+.marker{position:absolute;top:0;transform:translateX(-50%);transition:left .5s ease;pointer-events:none;z-index:3}
+.marker .mlabel{position:relative;display:block;font-size:12px;font-weight:800;background:var(--txt);color:var(--bg);
+  padding:3px 8px;border-radius:7px;white-space:nowrap;box-shadow:0 3px 9px #0008}
+.marker .mlabel::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--txt)}
+/* boundary ticks below the bar */
+.gauge-ticks{position:relative;height:18px;margin-top:7px}
+.gauge-ticks .tick{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--muted)}
+.gauge-ticks .tick::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:1px;height:6px;background:var(--line)}
+/* legend */
+.gauge-legend{display:flex;flex-wrap:wrap;gap:7px 12px;margin-top:14px}
+.gauge-legend .lg{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.gauge-legend .lg i{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.gauge-legend .lg b{color:var(--txt);font-weight:700}
+.gauge-legend .cooldown i{background:var(--cooldown)}
+.gauge-legend .normal i{background:var(--normal)}
+.gauge-legend .caution i{background:var(--caution)}
+.gauge-legend .overheat i{background:var(--overheat)}
 
 /* Range buttons */
 .range-btns{display:flex;gap:6px}
@@ -78,7 +104,7 @@ a{color:var(--accent);text-decoration:none}
 .theory p{font-size:14px;margin:8px 0}
 .theory-list{list-style:none;padding:0;margin:12px 0;display:flex;flex-direction:column;gap:8px}
 .theory-list li{font-size:13.5px;display:flex;align-items:center;gap:10px}
-.tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:6px;color:#0b0f17;min-width:78px;text-align:center}
+.tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:6px;color:#0b0f17;min-width:78px;text-align:center;flex:0 0 auto}
 .tag.overheat{background:var(--overheat);color:#fff} .tag.caution{background:var(--caution);color:#0b0f17}
 .tag.normal{background:var(--normal);color:#0b0f17} .tag.cooldown{background:var(--cooldown);color:#fff}
 .muted{color:var(--muted);font-size:12px}
@@ -89,7 +115,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
 th{color:var(--muted);font-weight:600;font-size:12px}
-.pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
 .pill.overheat{background:#3a1414;color:#fca5a5} .pill.caution{background:#3a2a12;color:#fcd34d}
 .pill.normal{background:#10261a;color:#86efac} .pill.cooldown{background:#12233a;color:#93c5fd}
 
@@ -97,7 +123,38 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .foot{padding:24px 16px 40px;color:var(--muted);font-size:12px}
 .foot p{margin:4px 0}
 
+/* ===== Mobile ===== */
 @media(max-width:640px){
   .hero{grid-template-columns:1fr}
   .disp{font-size:54px}
+
+  /* Recent records → card layout so 구간(zone) is always visible, no horizontal scroll */
+  .table-box{overflow:visible}
+  #histTable thead{display:none}
+  #histTable tbody{display:flex;flex-direction:column;gap:10px}
+  #histTable tr{
+    display:grid;
+    grid-template-columns:1fr auto;
+    grid-template-areas:"date zone" "disp zone" "kospi ma50";
+    align-items:center;
+    column-gap:10px;row-gap:3px;
+    background:var(--card2);border:1px solid var(--line);border-radius:12px;
+    padding:11px 14px;
+  }
+  #histTable td{border:none;padding:0;white-space:nowrap;text-align:left;font-size:13px}
+  #histTable .c-date{grid-area:date;color:var(--muted);font-size:12.5px}
+  #histTable .c-disp{grid-area:disp;font-size:21px;font-weight:800;letter-spacing:-.5px}
+  #histTable .c-disp b{font-weight:800}
+  #histTable .c-zone{grid-area:zone;justify-self:end;align-self:center}
+  #histTable .c-zone .pill{font-size:13px;padding:6px 13px}
+  #histTable .c-kospi{grid-area:kospi}
+  #histTable .c-ma50{grid-area:ma50;justify-self:end;text-align:right}
+  #histTable .c-kospi,#histTable .c-ma50{font-size:11.5px;color:var(--muted);margin-top:2px}
+  #histTable .c-kospi::before{content:"코스피 ";opacity:.65}
+  #histTable .c-ma50::before{content:"50일선 ";opacity:.65}
+}
+
+@media(max-width:380px){
+  .brand .sub{display:none}
+  .brand h1{font-size:16.5px}
 }
