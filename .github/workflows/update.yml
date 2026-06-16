@@ -3,8 +3,15 @@ name: 코스피 50일 이격도 갱신
 on:
   schedule:
     # GitHub Actions cron 은 UTC 기준. KST = UTC+9.
-    - cron: "0 3 * * 1-5"    # 12:00 KST — 장중 속보(intraday)
-    - cron: "40 6 * * 1-5"   # 15:40 KST — 종가 확정(close)
+    # ※ 무료 티어 cron 은 정시 보장이 안 되고 정각(:00)이 가장 혼잡 → 정각 회피 + 시점별 다중 시도.
+    #   파이프라인이 멱등(무변경=빈커밋 차단, 종가는 동일값 no-op)이라 중복 실행 안전.
+    # 장중(intraday) ≈ 12:00 KST = 03:xx UTC
+    - cron: "7 3 * * 1-5"    # 12:07 KST — 장중 1차
+    - cron: "20 3 * * 1-5"   # 12:20 KST — 장중 백업
+    # 종가(close) ≈ 15:40 KST = 06~07:xx UTC (장 마감 15:30 이후라 동일 종가 → 백업은 no-op)
+    - cron: "42 6 * * 1-5"   # 15:42 KST — 종가 1차
+    - cron: "57 6 * * 1-5"   # 15:57 KST — 종가 백업
+    - cron: "12 7 * * 1-5"   # 16:12 KST — 종가 백업2
   workflow_dispatch:
     inputs:
       type:
@@ -46,10 +53,12 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TYPE="${{ inputs.type }}"
             FORCE="${{ inputs.force }}"
-          elif [ "${{ github.event.schedule }}" = "40 6 * * 1-5" ]; then
-            TYPE="close"; FORCE="false"
           else
-            TYPE="intraday"; FORCE="false"
+            # 스케줄 크론의 UTC '시(hour)'로 유형 결정 (지연돼도 크론식은 의도 시각 유지).
+            #   03시대 → 장중(intraday), 06~07시대 → 종가(close)
+            H=$(echo "${{ github.event.schedule }}" | awk '{print $2}')
+            if [ "$H" -ge 6 ]; then TYPE="close"; else TYPE="intraday"; fi
+            FORCE="false"
           fi
           echo "type=$TYPE" >> "$GITHUB_OUTPUT"
           echo "force=$FORCE" >> "$GITHUB_OUTPUT"
