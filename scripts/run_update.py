@@ -47,10 +47,12 @@ def main() -> int:
     history = D.compute_history(raw)
     print(f"[update] 일봉 {len(history)}개, 이격도 산출 {sum(1 for p in history if p.ma50)}개")
 
-    # 갱신 여부 판단.
-    #  - close   : 직전 커밋된 마지막 확정 종가일보다 새 종가가 있으면 갱신(놓친 날 따라잡기).
-    #  - intraday: 새 종가가 있거나 '평일'이면 갱신(장중 실시간 추정치 반영).
-    # ※ 기존엔 "마지막 데이터일 == 오늘"일 때만 갱신해서, 한 번 놓치면 영영 따라잡지 못했음.
+    # 갱신 여부 판단. (※ 기존엔 "마지막 데이터일 == 오늘"일 때만 갱신해서,
+    #  소스가 잠깐 stale하면 한 번 놓친 뒤 영영 따라잡지 못했음.)
+    #  - has_new_close: 직전 커밋보다 새 확정 종가가 있음 → 놓친 날 따라잡기.
+    #  - is_today     : 소스에 '오늘' 바가 있음 = 거래일 → 당일 종가/장중값을 (재)반영.
+    #    (동일일 재실행은 워크플로의 git diff 게이트가 무변경 커밋을 막아줌 →
+    #     장중 실행분도 15:40 실제 종가가 나오면 자동으로 덮어써짐.)
     latest_date = history[-1].date if history else None
     prev_committed = None
     if HISTORY_PATH.exists():
@@ -59,14 +61,15 @@ def main() -> int:
             prev_committed = prev[-1]["date"] if prev else None
         except Exception:  # noqa: BLE001
             prev_committed = None
+    today = dt.datetime.now(D.KST).strftime("%Y-%m-%d")
     has_new_close = latest_date is not None and (
         prev_committed is None or latest_date > prev_committed
     )
-    is_weekday = dt.datetime.now(D.KST).weekday() < 5
-    should_update = has_new_close if args.type == "close" else (has_new_close or is_weekday)
+    is_today = latest_date == today
+    should_update = has_new_close or is_today
 
     if not should_update and not args.force:
-        print(f"[update] 새 데이터 없음(최신 종가일: {latest_date}, 직전 커밋: "
+        print(f"[update] 새 데이터 없음(최신 데이터일: {latest_date}, 직전 커밋: "
               f"{prev_committed}). 갱신/알림 생략. (--force로 강제)")
         return 0
 
