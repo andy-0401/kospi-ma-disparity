@@ -91,14 +91,16 @@ a{color:var(--accent);text-decoration:none}
 .gauge-legend .overheat i{background:var(--overheat)}
 
 /* Range buttons */
-.range-btns{display:flex;gap:6px}
+.range-btns{display:flex;gap:6px;flex-wrap:wrap}
 .range-btns button{background:#0f1521;border:1px solid var(--line);color:var(--muted);font-size:12px;padding:5px 11px;border-radius:8px;cursor:pointer}
 .range-btns button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .legend-hint{font-size:11.5px;color:var(--muted)}
+.legend-row{margin:-2px 0 10px}
 
 /* Charts */
-.chart-box{position:relative;height:300px}
+.chart-box{position:relative;height:300px;touch-action:pan-y}
 @media(max-width:640px){.chart-box{height:240px}}
+.chart-hint{font-size:11px;color:var(--muted);margin:8px 2px 0;text-align:center;opacity:.8}
 
 /* Theory */
 .theory p{font-size:14px;margin:8px 0}
@@ -152,6 +154,13 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   #histTable .c-kospi,#histTable .c-ma50{font-size:11.5px;color:var(--muted);margin-top:2px}
   #histTable .c-kospi::before{content:"코스피 ";opacity:.65}
   #histTable .c-ma50::before{content:"50일선 ";opacity:.65}
+
+  /* 이론 해석법: 모바일 가독성 (태그 상단 정렬 + 줄간격 확보) */
+  .theory{padding:16px}
+  .theory p{font-size:13.5px;line-height:1.6}
+  .theory-list{gap:11px}
+  .theory-list li{align-items:flex-start;gap:9px;line-height:1.5;font-size:13px}
+  .tag{min-width:62px;font-size:11px;padding:3px 7px;margin-top:1px}
 }
 
 @media(max-width:380px){

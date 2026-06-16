@@ -43,13 +43,31 @@
     HISTORY = (hist || []).filter((d) => d && d.disparity != null);
     renderHero(latest);
     if (HISTORY.length) {
+      registerZoom();
       buildPriceChart(250);
-      buildDispChart();
+      buildDispChart(250);
       renderTable();
-      wireRangeButtons();
+      wireRangeButtons("rangeBtns", (n) => buildPriceChart(n));
+      wireRangeButtons("rangeBtnsDisp", (n) => buildDispChart(n));
     } else {
       emptyState();
     }
+  }
+
+  // chartjs-plugin-zoom 등록 (UMD 전역명이 버전별로 달라 방어적으로 처리)
+  function registerZoom() {
+    if (!window.Chart) return;
+    const z = window.ChartZoom || window.chartjsPluginZoom || window["chartjs-plugin-zoom"];
+    if (z && (z.id === "zoom" || z.default)) {
+      try { window.Chart.register(z.default || z); } catch (e) { /* 이미 등록됨 */ }
+    }
+  }
+  // 줌/팬 옵션 (모바일: 핀치·드래그 / PC: 휠·드래그) — x축 기준
+  function zoomOpts() {
+    return {
+      pan: { enabled: true, mode: "x" },
+      zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: "x" },
+    };
   }
 
   async function fetchJSON(url) {
@@ -128,10 +146,11 @@
       },
       options: baseOpts(),
     });
+    ctx.ondblclick = () => priceChart.resetZoom();
   }
 
-  function buildDispChart() {
-    const data = HISTORY.slice(-250);
+  function buildDispChart(n) {
+    const data = slice(n);
     const labels = data.map((d) => d.date);
     const vals = data.map((d) => d.disparity);
     const ctx = $("dispChart");
@@ -155,10 +174,11 @@
         ],
       },
       options: Object.assign(baseOpts(), {
-        plugins: { legend: { display: false }, tooltip: tip() },
+        plugins: { legend: { display: false }, tooltip: tip(), zoom: zoomOpts() },
         scales: scales({ suggestedMin: Math.min(100, Math.min(...vals) - 3), suggestedMax: Math.max(132, Math.max(...vals) + 3) }),
       }),
     });
+    ctx.ondblclick = () => dispChart.resetZoom();
   }
 
   function segColor(ctx) {
@@ -173,7 +193,11 @@
     return {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
-      plugins: { legend: { labels: { color: css("--muted"), boxWidth: 14, font: { size: 11 } } }, tooltip: tip() },
+      plugins: {
+        legend: { labels: { color: css("--muted"), boxWidth: 14, font: { size: 11 } } },
+        tooltip: tip(),
+        zoom: zoomOpts(),
+      },
       scales: scales({}),
     };
   }
@@ -191,14 +215,15 @@
     };
   }
 
-  function wireRangeButtons() {
-    const box = $("rangeBtns");
+  function wireRangeButtons(boxId, onPick) {
+    const box = $(boxId);
+    if (!box) return;
     box.addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       [...box.children].forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
-      buildPriceChart(+b.dataset.r);
-      track("range_change", { range: b.dataset.r });
+      onPick(+b.dataset.r);
+      track("range_change", { chart: boxId, range: b.dataset.r });
     });
   }
 
