@@ -110,19 +110,29 @@
         <button data-r="60">3M</button>
         <button data-r="120">6M</button>
         <button data-r="250" class="on">1Y</button>
-        <button data-r="0">All</button>
+        <button data-r="500">2Y</button>
+        <button data-r="1250">5Y</button>
       </div>
     </div>
     <div class="chart-box"><canvas id="priceChart"></canvas></div>
+    <p class="chart-hint">🔍 핀치·휠로 확대 · 드래그로 이동 · 더블탭으로 초기화</p>
   </section>
 
   <!-- 차트: 이격도 -->
   <section class="card">
     <div class="card-head">
       <h2>50일 이격도 추이</h2>
-      <span class="legend-hint">🔴 130 과열 · 🔵 105 과열해소</span>
+      <div class="range-btns" id="rangeBtnsDisp">
+        <button data-r="60">3M</button>
+        <button data-r="120">6M</button>
+        <button data-r="250" class="on">1Y</button>
+        <button data-r="500">2Y</button>
+        <button data-r="1250">5Y</button>
+      </div>
     </div>
+    <div class="legend-hint legend-row">🔴 130 과열 · 🔵 105 과열해소</div>
     <div class="chart-box"><canvas id="dispChart"></canvas></div>
+    <p class="chart-hint">🔍 핀치·휠로 확대 · 드래그로 이동 · 더블탭으로 초기화</p>
   </section>
 
   <!-- 이그전 이론 설명 -->
@@ -157,6 +167,9 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="./app.js?v=20260613-2" defer></script>
+<!-- 차트 줌/팬(모바일 핀치·드래그) -->
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script src="./app.js?v=20260613-3" defer></script>
 </body>
 </html>

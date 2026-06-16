@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import os
 import sys
@@ -46,10 +47,27 @@ def main() -> int:
     history = D.compute_history(raw)
     print(f"[update] 일봉 {len(history)}개, 이격도 산출 {sum(1 for p in history if p.ma50)}개")
 
-    trading_today = D.is_trading_today(history)
-    if not trading_today and not args.force:
-        print(f"[update] 오늘은 거래일이 아닙니다(최신 종가일: "
-              f"{history[-1].date if history else 'N/A'}). 갱신/알림 생략. (--force로 강제)")
+    # 갱신 여부 판단.
+    #  - close   : 직전 커밋된 마지막 확정 종가일보다 새 종가가 있으면 갱신(놓친 날 따라잡기).
+    #  - intraday: 새 종가가 있거나 '평일'이면 갱신(장중 실시간 추정치 반영).
+    # ※ 기존엔 "마지막 데이터일 == 오늘"일 때만 갱신해서, 한 번 놓치면 영영 따라잡지 못했음.
+    latest_date = history[-1].date if history else None
+    prev_committed = None
+    if HISTORY_PATH.exists():
+        try:
+            prev = json.loads(HISTORY_PATH.read_text(encoding="utf-8"))
+            prev_committed = prev[-1]["date"] if prev else None
+        except Exception:  # noqa: BLE001
+            prev_committed = None
+    has_new_close = latest_date is not None and (
+        prev_committed is None or latest_date > prev_committed
+    )
+    is_weekday = dt.datetime.now(D.KST).weekday() < 5
+    should_update = has_new_close if args.type == "close" else (has_new_close or is_weekday)
+
+    if not should_update and not args.force:
+        print(f"[update] 새 데이터 없음(최신 종가일: {latest_date}, 직전 커밋: "
+              f"{prev_committed}). 갱신/알림 생략. (--force로 강제)")
         return 0
 
     # 히스토리 저장 (확정 일봉)
