@@ -13,11 +13,9 @@
   - 설정은 `docs/config.js` 한 곳: `telegramUrl`, `gaMeasurementId`
   - 자동 이벤트: 채널 클릭 `telegram_click`, 차트 기간전환 `range_change` (`docs/app.js`의 `track()`)
   - **채널 공유용 단축 링크**(쿼리스트링 숨김 + GA 유입원=telegram 집계). 이걸 공유하면 됨:
-    - 런칭: `https://andy-0401.github.io/kospi-ma-disparity/launch`
-    - 매일: `https://andy-0401.github.io/kospi-ma-disparity/daily`
-    - 원리: `docs/launch/`·`docs/daily/`의 한 줄짜리 리다이렉트 페이지가 아래 풀 UTM 으로 즉시 전달.
-    - (풀 UTM 원본) `…/kospi-ma-disparity/?utm_source=telegram&utm_medium=channel&utm_campaign=launch`(또는 `=daily`)
-    - 더 짧게(`bit.ly/…` 등 도메인까지 줄이려면) 외부 단축 서비스에 위 단축 링크를 한 번 더 통과시키면 됨.
+    - 런칭: `https://kospi-ma.netlify.app/launch`
+    - 매일: `https://kospi-ma.netlify.app/daily`
+    - 원리: `docs/launch/`·`docs/daily/`의 한 줄짜리 리다이렉트 페이지가 풀 UTM(`../?utm_source=telegram&utm_medium=channel&utm_campaign=launch`)으로 즉시 전달. 상대경로라 netlify·github.io 양쪽에서 동작.
 
 ## ✅ 현재까지 완료 (2026-06-10)
 - 50일 이격도 계산 엔진 (`scripts/disparity.py`) — pykrx/Naver/Yahoo 무료 데이터 + 폴백
@@ -25,8 +23,10 @@
 - 텔레그램 알림 모듈 (`scripts/telegram_notify.py`) — **코드 완성, 시크릿만 넣으면 작동**
 - 웹 (`docs/`) — 현재 상황 카드·게이지·코스피/50일선 차트·이격도 차트·기록 테이블·이론
 - 자동화 (`.github/workflows/update.yml`) — 매 거래일 12:00 장중속보 / 15:40 종가확정
-- **저장소 public 전환 + GitHub Pages 배포 완료**
-  - 라이브: https://andy-0401.github.io/kospi-ma-disparity/
+- **배포 완료 — 외부 공유용 기본 주소는 Netlify**
+  - 🔵 라이브(기본/공유용): https://kospi-ma.netlify.app  ← Netlify, GitHub 레포 연결로 푸시마다 자동 재배포
+  - (미러) GitHub Pages: https://andy-0401.github.io/kospi-ma-disparity/ — 그대로 살아있음
+  - 둘 다 같은 `main`의 `docs/`를 서빙하므로 데이터/디자인 동일
 - 실데이터 1회 적재 완료 (이격도 ~112.7%, 정상 범위)
 
 > ⚠️ 운영 메모: **라이브 브랜치는 `main`**. 워크플로가 매 실행마다 `main`에 데이터를 커밋한다.
@@ -41,7 +41,7 @@
 **어디:** Settings → Secrets and variables → Actions
 - `TELEGRAM_BOT_TOKEN` (Secret) — @BotFather `/newbot` 토큰
 - `TELEGRAM_CHAT_ID` (Secret) — 공개 채널 `@핸들` 또는 `-100…`
-- `WEB_URL` (Variable, 선택) — `https://andy-0401.github.io/kospi-ma-disparity/` (알림 하단 링크)
+- `WEB_URL` (Variable, 선택) — `https://kospi-ma.netlify.app` (알림 하단 링크)
 
 **어떻게(순서):**
 1. @BotFather로 봇 생성 → 토큰 확보
