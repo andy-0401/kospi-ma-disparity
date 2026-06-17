@@ -3,3 +3,8 @@
 [build]
   publish = "docs"
   command = ""
+
+# 예약 함수: 매 거래일 12:00·15:40 KST 정시에 GitHub 워크플로를 트리거(정시성 확보).
+# 함수 코드의 export const config.schedule 로 cron 이 등록됨. 환경변수 GH_DISPATCH_TOKEN 필요.
+[functions]
+  directory = "netlify/functions"
