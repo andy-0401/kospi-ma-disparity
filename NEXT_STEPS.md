@@ -12,10 +12,12 @@
 - **#4 유저 트래킹(GA4) — 기본 완료/라이브.** 측정 ID `G-B8M3849G0G` 활성, 실시간 수집 확인됨.
   - 설정은 `docs/config.js` 한 곳: `telegramUrl`, `gaMeasurementId`
   - 자동 이벤트: 채널 클릭 `telegram_click`, 차트 기간전환 `range_change` (`docs/app.js`의 `track()`)
-  - **채널 공유용 단축 링크**(쿼리스트링 숨김 + GA 유입원=telegram 집계). 이걸 공유하면 됨:
-    - 런칭: `https://kospi-ma.netlify.app/launch`
-    - 매일: `https://kospi-ma.netlify.app/daily`
-    - 원리: `docs/launch/`·`docs/daily/`의 한 줄짜리 리다이렉트 페이지가 풀 UTM(`../?utm_source=telegram&utm_medium=channel&utm_campaign=launch`)으로 즉시 전달. 상대경로라 netlify·github.io 양쪽에서 동작.
+  - **채널별 공유 단축 링크**(쿼리스트링 숨김 + GA 유입원 구분 집계). 채널에 맞는 걸 공유:
+    - 텔레그램: `https://kospi-ma.netlify.app/telegram`  → `utm_source=telegram&utm_medium=channel&utm_campaign=telegram`
+    - 개인 공유: `https://kospi-ma.netlify.app/share`      → `utm_source=personal&utm_medium=share&utm_campaign=share`
+    - (레거시) 매일: `https://kospi-ma.netlify.app/daily`    → `utm_campaign=daily` — 채널별 체계로 바뀌어 telegram과 중복, 정리 검토
+    - 원리: `docs/<이름>/index.html`의 한 줄 리다이렉트가 풀 UTM(`../?utm_...`)으로 즉시 전달. 상대경로라 netlify·github.io 양쪽 동작.
+    - **새 채널 추가**(예: blog/kakao): `docs/<이름>/index.html`를 같은 형식으로 만들고 `utm_source`/`utm_campaign`만 바꾸면 끝.
 
 ## ✅ 현재까지 완료 (2026-06-10)
 - 50일 이격도 계산 엔진 (`scripts/disparity.py`) — pykrx/Naver/Yahoo 무료 데이터 + 폴백
