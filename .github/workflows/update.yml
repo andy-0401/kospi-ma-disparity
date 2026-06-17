@@ -12,6 +12,10 @@ on:
     - cron: "42 6 * * 1-5"   # 15:42 KST — 종가 1차
     - cron: "57 6 * * 1-5"   # 15:57 KST — 종가 백업
     - cron: "12 7 * * 1-5"   # 16:12 KST — 종가 백업2
+  # 외부 스케줄러(cron-job.org 등)가 정시에 호출 → GitHub cron 지연 우회.
+  #   POST /repos/{owner}/{repo}/dispatches  body: {"event_type":"intraday"|"close"}
+  repository_dispatch:
+    types: [intraday, close]
   workflow_dispatch:
     inputs:
       type:
@@ -53,6 +57,9 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TYPE="${{ inputs.type }}"
             FORCE="${{ inputs.force }}"
+          elif [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            # 외부 스케줄러가 보낸 event_type(intraday|close)을 그대로 사용
+            TYPE="${{ github.event.action }}"; FORCE="false"
           else
             # 스케줄 크론의 UTC '시(hour)'로 유형 결정 (지연돼도 크론식은 의도 시각 유지).
             #   03시대 → 장중(intraday), 06~07시대 → 종가(close)
