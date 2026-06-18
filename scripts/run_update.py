@@ -83,6 +83,27 @@ def main() -> int:
 
     # 스냅샷
     snap = D.build_snapshot(history, run_type=args.type)
+
+    # 다운그레이드 방지: 이미 확정된 '종가'를, 정규장 밖(예: 스케줄 지연·수동/외부
+    #  dispatch)에서 뒤늦게 실행된 '장중' 스냅샷이 덮어쓰지 못하게 한다.
+    #  (과거 사례: 23:40 KST에 장중 실행이 돌면서 fetch_live가 마감 종가를 그대로
+    #   되돌려줘 같은 날 종가를 'intraday 12:00'으로 되돌려놨음.)
+    #  규칙: 새 스냅샷이 intraday이고, 기존 latest 가
+    #    (a) 더 미래 날짜  또는  (b) 같은 날의 'close' 확정  이면 → 쓰지 않음.
+    prev_latest = None
+    if LATEST_PATH.exists():
+        try:
+            prev_latest = json.loads(LATEST_PATH.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            prev_latest = None
+
+    if snap.type == "intraday" and prev_latest and not args.force:
+        pd_, pt_ = prev_latest.get("date"), prev_latest.get("type")
+        if pd_ and (snap.date < pd_ or (snap.date == pd_ and pt_ == "close")):
+            print(f"[update] 장중 스냅샷({snap.date})이 기존 확정 스냅샷"
+                  f"({pt_} {pd_})을 덮어쓰지 않음 — latest.json 갱신/알림 생략.")
+            return 0
+
     LATEST_PATH.write_text(
         json.dumps(asdict(snap), ensure_ascii=False, indent=2),
         encoding="utf-8",
