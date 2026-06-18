@@ -1,16 +1,16 @@
 {
   "date": "2026-06-18",
-  "time": "12:00",
-  "type": "intraday",
+  "time": "15:40",
+  "type": "close",
   "type_label": "updated",
-  "kospi": 8930.65,
-  "ma50": 7292.22,
-  "disparity": 122.47,
-  "change": -0.0,
-  "change_pct": -0.0,
-  "prev_disparity": 122.47,
+  "kospi": 9095.27,
+  "ma50": 7295.51,
+  "disparity": 124.67,
+  "change": 231.03,
+  "change_pct": 2.61,
+  "prev_disparity": 122.75,
   "zone": "caution",
   "zone_label": "과열 경계 (관심)",
-  "note": "정규장 중 실시간 현재가 기준 추정치입니다(종가 확정 시 갱신).",
-  "updated_at": "2026-06-18T12:00:00+09:00"
+  "note": "장 마감 종가 기준 확정값입니다.",
+  "updated_at": "2026-06-18T15:40:00+09:00"
 }
