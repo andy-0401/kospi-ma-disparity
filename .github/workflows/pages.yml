@@ -11,11 +11,10 @@ on:
   workflow_run:
     workflows: ["코스피 50일 이격도 갱신"]
     types: [completed]
-  # 사람이 직접 docs/ 를 고쳐 push 했을 때(개발/문구 수정).
+  # main 에 푸시될 때마다 게시(데이터 커밋은 위 workflow_run 이 담당,
+  #   여기서는 사람이 직접 올린 변경을 빠짐없이 반영).
   push:
     branches: [main]
-    paths:
-      - "docs/**"
   workflow_dispatch:
 
 permissions:
