@@ -1,9 +1,12 @@
 :root{
   --bg:#0b0f17; --card:#131a26; --card2:#0f1521; --line:#222c3d;
   --txt:#e7edf6; --muted:#8b97aa; --accent:#3b82f6;
+  /* 이격도 구간색 */
   --overheat:#ef4444; --caution:#f59e0b; --normal:#22c55e; --cooldown:#3b82f6;
-  --up:#ef4444; --down:#3b82f6;
-  --tg:#229ED9;
+  /* MDD 구간색(동반 표기/통합신호용) */
+  --watch:#f59e0b; --correction:#f97316; --breach:#ef4444;
+  --up:#ef4444; --down:#3b82f6; --tg:#229ED9;
+  --kospi:#60a5fa; --kosdaq:#f472b6;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -24,78 +27,121 @@ a{color:var(--accent);text-decoration:none}
 .brand h1{font-size:18px;margin:0;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand .sub{margin:1px 0 0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* Telegram button */
+/* Tabs + 텔레그램 */
+.top-right{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0}
+.tabs{display:inline-flex;gap:4px;flex:0 0 auto;background:#0f1521;border:1px solid var(--line);border-radius:999px;padding:3px}
+.tab{font-size:13px;font-weight:700;color:var(--muted);padding:6px 13px;border-radius:999px;white-space:nowrap;line-height:1}
+.tab.on{background:var(--accent);color:#fff}
+a.tab:hover{color:var(--txt)}
+a.tab.on:hover{color:#fff}
 .tg{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
-  font-size:14px;font-weight:600;color:#fff;background:var(--tg);border:none;
-  padding:6px 12px;border-radius:999px;box-shadow:0 2px 10px #229ed94d;transition:background .15s,transform .15s}
+  font-size:13px;font-weight:700;color:#fff;background:var(--tg);border:none;
+  padding:7px 12px;border-radius:999px;box-shadow:0 2px 10px #229ed94d;transition:background .15s,transform .15s}
 .tg:hover{background:#1b8ec4;color:#fff}
 .tg:active{transform:scale(.97)}
-.tg svg{flex:0 0 auto;display:block;width:18px;height:18px}
+.tg svg{flex:0 0 auto;display:block;width:16px;height:16px}
 
 /* Cards */
 .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0;box-shadow:0 6px 24px #00000033}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap}
-.card-head h2,.theory h2{font-size:15px;margin:0;letter-spacing:-.2px}
-
-/* Hero */
-.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
-.badge-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
-.type-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#1f2a3d;border:1px solid var(--line);color:var(--txt)}
-.type-badge.intraday{background:#3a2a12;border-color:#6b4a16;color:#fcd34d}
-.type-badge.close{background:#10261a;border-color:#1d5a37;color:#86efac}
+.card-head h2,.theory h2,.signal-head h2{font-size:15px;margin:0;letter-spacing:-.2px}
+.hint{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:4px}
 .ts{font-size:12px;color:var(--muted)}
-.disp{font-size:64px;font-weight:800;letter-spacing:-2px;line-height:1.05;margin-top:4px}
-.disp .pct{font-size:26px;font-weight:700;color:var(--muted);margin-left:4px}
-.zone{font-size:16px;font-weight:700;margin-top:2px}
-.disp-delta{font-size:13px;color:var(--muted);margin-top:4px}
-.hero-right{display:flex;flex-direction:column;gap:10px;justify-content:center}
-.stat{display:flex;align-items:baseline;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:8px}
-.stat .k{font-size:12px;color:var(--muted);min-width:88px}
-.stat .v{font-size:18px;font-weight:700}
-.stat .v.small{font-size:13px;font-weight:600;color:var(--muted)}
-.stat .chg{font-size:13px;font-weight:600}
-.note{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* zone colors */
-.z-overheat{color:var(--overheat)} .z-caution{color:var(--caution)}
-.z-normal{color:var(--normal)} .z-cooldown{color:var(--cooldown)}
+/* Lv3: 통합 신호 배너 */
+.signal-card{padding:16px 18px}
+.signal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.signal-rows{display:flex;flex-direction:column;gap:10px}
+.sig{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;
+  background:var(--card2);border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:12px 14px}
+.sig .sig-emoji{font-size:24px;line-height:1}
+.sig .sig-main{min-width:0}
+.sig .sig-idx{font-size:12px;color:var(--muted);font-weight:700}
+.sig .sig-verdict{font-size:16px;font-weight:800;letter-spacing:-.3px;margin:1px 0}
+.sig .sig-desc{font-size:12.5px;color:var(--muted);line-height:1.45}
+.sig.buy{border-left-color:var(--normal)} .sig.wait{border-left-color:var(--watch)}
+.sig.avoid{border-left-color:var(--correction)} .sig.alert{border-left-color:var(--breach)}
+.sig.neutral{border-left-color:var(--muted)}
+.sig.buy .sig-verdict{color:var(--normal)} .sig.wait .sig-verdict{color:var(--watch)}
+.sig.avoid .sig-verdict{color:var(--correction)} .sig.alert .sig-verdict{color:var(--breach)}
+.signal-note{font-size:11px;color:var(--muted);margin:12px 0 0;line-height:1.5}
+
+/* Lv2: 지수 듀얼 카드 */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.idx-card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 24px #00000033}
+.idx-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.idx-name{font-size:15px;font-weight:800;letter-spacing:-.2px}
+.idx-name .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.idx-name .dot.kospi{background:var(--kospi)} .idx-name .dot.kosdaq{background:var(--kosdaq)}
+.idx-price{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.idx-price .chg{display:block;font-weight:700;font-size:12.5px}
+.dd-big{font-size:48px;font-weight:800;letter-spacing:-2px;line-height:1.05;margin:2px 0}
+.dd-big .pct{font-size:22px;font-weight:700;color:var(--muted);margin-left:2px}
+.idx-zone{font-size:14px;font-weight:800;margin-bottom:10px}
+.idx-zone .zsub{font-size:12px;font-weight:600;color:var(--muted);margin-left:8px}
+.idx-stats{display:flex;flex-direction:column;gap:7px}
+.idx-stats .row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:7px;font-size:12.5px}
+.idx-stats .row:last-child{border-bottom:none;padding-bottom:0}
+.idx-stats .k{color:var(--muted)}
+.idx-stats .v{font-weight:700;font-size:13.5px}
+.idx-stats .v .sub{color:var(--muted);font-weight:600;font-size:12px;margin-left:4px}
+
+/* 구간색 텍스트 — 이격도(dz-*) / MDD(z-*) */
+.dz-overheat{color:var(--overheat)} .dz-caution{color:var(--caution)}
+.dz-normal{color:var(--normal)} .dz-cooldown{color:var(--cooldown)}
+.z-normal{color:var(--normal)} .z-watch{color:var(--watch)}
+.z-correction{color:var(--correction)} .z-breach{color:var(--breach)}
 .up{color:var(--up)} .down{color:var(--down)}
 
-/* Gauge */
+/* 이격도 게이지 (95 ~ 140) */
 .gauge-card{padding:18px}
-.gauge-wrap{position:relative;padding-top:30px}
+.gauge-wrap{position:relative;padding-top:54px}
 .gauge-track{position:relative;display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
 .seg{height:100%}
 .seg.cooldown{flex:0 0 22.222%;background:var(--cooldown)}
 .seg.normal{flex:0 0 33.333%;background:var(--normal)}
 .seg.caution{flex:0 0 22.222%;background:var(--caution)}
 .seg.overheat{flex:0 0 22.222%;background:var(--overheat)}
-/* marker (current value) — bubble above the bar, triangle points down */
+/* 구간(zone) 기준 게이지 — 동일폭 4분할 */
+.gauge-track.eq .seg{flex:0 0 25%}
 .marker{position:absolute;top:0;transform:translateX(-50%);transition:left .5s ease;pointer-events:none;z-index:3}
-.marker .mlabel{position:relative;display:block;font-size:12px;font-weight:800;background:var(--txt);color:var(--bg);
+.marker.low{top:26px}
+.marker .mlabel{position:relative;display:block;font-size:11.5px;font-weight:700;background:var(--txt);color:var(--bg);
   padding:3px 8px;border-radius:7px;white-space:nowrap;box-shadow:0 3px 9px #0008}
+.marker .mlabel b{font-weight:800}
 .marker .mlabel::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
   border:6px solid transparent;border-top-color:var(--txt)}
-/* boundary ticks below the bar */
 .gauge-ticks{position:relative;height:18px;margin-top:7px}
 .gauge-ticks .tick{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--muted)}
 .gauge-ticks .tick::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:1px;height:6px;background:var(--line)}
-/* legend */
+.gauge-ticks.zone .zt{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--muted)}
 .gauge-legend{display:flex;flex-wrap:wrap;gap:7px 12px;margin-top:14px}
 .gauge-legend .lg{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .gauge-legend .lg i{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
 .gauge-legend .lg b{color:var(--txt);font-weight:700}
-.gauge-legend .cooldown i{background:var(--cooldown)}
-.gauge-legend .normal i{background:var(--normal)}
-.gauge-legend .caution i{background:var(--caution)}
-.gauge-legend .overheat i{background:var(--overheat)}
+.gauge-legend .cooldown i{background:var(--cooldown)} .gauge-legend .normal i{background:var(--normal)}
+.gauge-legend .caution i{background:var(--caution)} .gauge-legend .overheat i{background:var(--overheat)}
 
 /* Range buttons */
 .range-btns{display:flex;gap:6px;flex-wrap:wrap}
 .range-btns button{background:#0f1521;border:1px solid var(--line);color:var(--muted);font-size:12px;padding:5px 11px;border-radius:8px;cursor:pointer}
 .range-btns button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .legend-hint{font-size:11.5px;color:var(--muted)}
-.legend-row{margin:-2px 0 10px}
+
+/* 차트 시리즈 토글 */
+.series-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:-2px 0 10px}
+.series-toggles{display:inline-flex;gap:7px}
+.series-toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  background:#0f1521;border:1px solid var(--line);color:var(--muted);
+  font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:999px;line-height:1;
+  transition:opacity .15s,border-color .15s,color .15s}
+.series-toggle .sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto;transition:opacity .15s}
+.series-toggle .sw.kospi{background:var(--kospi)} .series-toggle .sw.kosdaq{background:var(--kosdaq)}
+.series-toggle.on{color:var(--txt)}
+.series-toggle.on[data-key="kospi"]{border-color:var(--kospi)}
+.series-toggle.on[data-key="kosdaq"]{border-color:var(--kosdaq)}
+.series-toggle:not(.on){opacity:.5;text-decoration:line-through}
+.series-toggle:not(.on) .sw{opacity:.35}
 
 /* Charts */
 .chart-box{position:relative;height:300px;touch-action:pan-y}
@@ -109,6 +155,10 @@ a{color:var(--accent);text-decoration:none}
 .tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:6px;color:#0b0f17;min-width:78px;text-align:center;flex:0 0 auto}
 .tag.overheat{background:var(--overheat);color:#fff} .tag.caution{background:var(--caution);color:#0b0f17}
 .tag.normal{background:var(--normal);color:#0b0f17} .tag.cooldown{background:var(--cooldown);color:#fff}
+/* 해석법 — 지수별(코스피·코스닥) 기준 나란히 */
+.theory-list.two li{display:block;line-height:1.6;font-size:13.5px}
+.theory-list.two .tag{display:inline-block;vertical-align:middle;margin-right:8px;margin-bottom:2px}
+.theory-list.two .lv{font-weight:800;margin-right:6px}
 .muted{color:var(--muted);font-size:12px}
 
 /* Table */
@@ -127,35 +177,28 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 
 /* ===== Mobile ===== */
 @media(max-width:640px){
-  .hero{grid-template-columns:1fr}
-  .disp{font-size:54px}
+  .dual{grid-template-columns:1fr;gap:12px}
+  .dd-big{font-size:42px}
+  .sig{grid-template-columns:auto 1fr;gap:10px}
 
-  /* Recent records → card layout so 구간(zone) is always visible, no horizontal scroll */
   .table-box{overflow:visible}
   #histTable thead{display:none}
   #histTable tbody{display:flex;flex-direction:column;gap:10px}
   #histTable tr{
-    display:grid;
-    grid-template-columns:1fr auto;
-    grid-template-areas:"date zone" "disp zone" "kospi ma50";
-    align-items:center;
-    column-gap:10px;row-gap:3px;
-    background:var(--card2);border:1px solid var(--line);border-radius:12px;
-    padding:11px 14px;
+    display:grid;grid-template-columns:1fr 1fr;
+    grid-template-areas:"date date" "kospi kosdaq" "kzone dzone";
+    align-items:center;column-gap:10px;row-gap:4px;
+    background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;
   }
   #histTable td{border:none;padding:0;white-space:nowrap;text-align:left;font-size:13px}
-  #histTable .c-date{grid-area:date;color:var(--muted);font-size:12.5px}
-  #histTable .c-disp{grid-area:disp;font-size:21px;font-weight:800;letter-spacing:-.5px}
-  #histTable .c-disp b{font-weight:800}
-  #histTable .c-zone{grid-area:zone;justify-self:end;align-self:center}
-  #histTable .c-zone .pill{font-size:13px;padding:6px 13px}
-  #histTable .c-kospi{grid-area:kospi}
-  #histTable .c-ma50{grid-area:ma50;justify-self:end;text-align:right}
-  #histTable .c-kospi,#histTable .c-ma50{font-size:11.5px;color:var(--muted);margin-top:2px}
-  #histTable .c-kospi::before{content:"코스피 ";opacity:.65}
-  #histTable .c-ma50::before{content:"50일선 ";opacity:.65}
+  #histTable .c-date{grid-area:date;color:var(--muted);font-size:12.5px;margin-bottom:2px}
+  #histTable .c-kospi{grid-area:kospi;font-size:19px;font-weight:800;letter-spacing:-.5px}
+  #histTable .c-kosdaq{grid-area:kosdaq;font-size:19px;font-weight:800;letter-spacing:-.5px}
+  #histTable .c-kzone{grid-area:kzone}
+  #histTable .c-dzone{grid-area:dzone}
+  #histTable .c-kospi::before{content:"코스피 ";font-size:11px;font-weight:600;color:var(--muted);opacity:.7}
+  #histTable .c-kosdaq::before{content:"코스닥 ";font-size:11px;font-weight:600;color:var(--muted);opacity:.7}
 
-  /* 이론 해석법: 모바일 가독성 (태그 상단 정렬 + 줄간격 확보) */
   .theory{padding:16px}
   .theory p{font-size:13.5px;line-height:1.6}
   .theory-list{gap:11px}
@@ -163,7 +206,12 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   .tag{min-width:62px;font-size:11px;padding:3px 7px;margin-top:1px}
 }
 
+@media(max-width:480px){
+  .tg .tg-text{display:none}
+  .tg{padding:7px 9px}
+}
 @media(max-width:380px){
   .brand .sub{display:none}
-  .brand h1{font-size:16.5px}
+  .brand h1{font-size:16px}
+  .tab{padding:6px 10px;font-size:12px}
 }
