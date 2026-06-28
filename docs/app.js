@@ -11,9 +11,6 @@
   let THRESH = DEFAULT_THRESH;
 
   const CFG = window.SITE_CONFIG || {};
-  let BASE = (CFG.mddBase || "").replace(/\/$/, "");
-  // 로컬 미리보기 한정: 같은 출처의 kr-mdd 데이터로 자동 전환(운영에는 영향 없음)
-  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) BASE = "/kr-mdd/docs";
   const track = (name, params) => {
     if (typeof window.gtag === "function") window.gtag("event", name, params || {});
   };
@@ -50,8 +47,8 @@
     wireTelegram();
     wireSeriesToggles();
     const [hist, latest] = await Promise.all([
-      fetchJSON(BASE + "/data/history.json"),
-      fetchJSON(BASE + "/data/latest.json"),
+      fetchJSON("./data/history.json"),
+      fetchJSON("./data/latest.json"),
     ]);
 
     HISTORY = (hist || []).filter((d) => d && d.kospi_disp != null);
