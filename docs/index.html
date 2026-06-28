@@ -8,7 +8,7 @@
 <meta property="og:title" content="코스피·코스닥 50일 이격도 · 이그전 트래커" />
 <meta property="og:description" content="코스피·코스닥 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%) · MDD 동시 활용" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="stylesheet" href="./styles.css?v=20260626-5" />
+<link rel="stylesheet" href="./styles.css?v=20260626-6" />
 
 <!-- 사이트 설정 (채널 링크 / GA4 ID / MDD 데이터) -->
 <script src="./config.js"></script>
@@ -54,17 +54,10 @@
 
 <main class="wrap">
 
-  <!-- Lv3: 통합 신호 배너 (이격도 + MDD) -->
-  <section class="card signal-card" id="signalCard">
-    <div class="signal-head">
-      <h2>통합 신호 <span class="hint">이격도 × MDD</span></h2>
-      <span class="ts" id="updatedAt">불러오는 중…</span>
-    </div>
-    <div class="signal-rows" id="signalRows"></div>
-    <p class="signal-note">※ 매수/매도 권유가 아니라 현재 구간을 설명하는 참고 지표입니다. 투자 판단의 책임은 본인에게 있습니다.</p>
-  </section>
+  <!-- 기준 시각 -->
+  <div class="updated-row"><span class="ts" id="updatedAt">불러오는 중…</span></div>
 
-  <!-- Lv2: 지수별 이격도 카드 (이격도 + MDD 나란히) -->
+  <!-- 지수별 현황 카드 (코스피·코스닥 이격도) -->
   <section class="dual" id="dualCards"></section>
 
   <!-- 이격도 게이지 (각 지수 자기 구간 기준) -->
@@ -153,6 +146,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
-<script src="./app.js?v=20260626-4" defer></script>
+<script src="./app.js?v=20260626-6" defer></script>
 </body>
 </html>
