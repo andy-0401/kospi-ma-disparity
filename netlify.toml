@@ -1,10 +1,28 @@
-# Netlify 설정 — 정적 사이트(docs/)를 루트로 서빙. 빌드 단계 없음.
-# 깃 푸시(스케줄 데이터 커밋 포함)마다 자동 재배포 → 자동 업데이트 그대로 유지.
+# netlify.app 의 두 가지 역할:
+#   1) 리다이렉트 — 실제 사이트는 무료 GitHub Pages 가 서빙(빌드·대역폭 무료).
+#      이미 공유된 https://kospi-ma.netlify.app 링크는 그대로 살아서 Pages 로 넘어간다.
+#   2) 정시 트리거(예약함수) — 매 거래일 12:00/15:40 KST 에 GitHub 워크플로를 깨운다.
+#      ※ GitHub 무료 cron 은 이 계정에서 매일 ~11시간 지연되므로 정시성을 보장 못 함.
+#        실제 정시 갱신은 아래 netlify/functions 의 예약함수가 책임진다(워크플로 cron 은 백업).
+#      ※ 이 함수들은 'GitHub 깨우기 신호(POST)'만 보낼 뿐 Netlify 재배포를 일으키지 않으므로
+#        크레딧을 거의 쓰지 않는다(크레딧 주범이던 'Production deploys' 와 무관).
+
 [build]
   publish = "docs"
   command = ""
+  # 데이터 커밋마다 재빌드(=크레딧 소모)하지 않도록, netlify.toml 이 바뀔 때만 빌드.
+  #   (리다이렉트/함수 설정은 거의 안 바뀌므로 사실상 빌드가 멈춘다.)
+  ignore = "git diff --quiet HEAD^ HEAD -- netlify.toml"
 
-# 예약 함수: 매 거래일 12:00·15:40 KST 정시에 GitHub 워크플로를 트리거(정시성 확보).
-# 함수 코드의 export const config.schedule 로 cron 이 등록됨. 환경변수 GH_DISPATCH_TOKEN 필요.
+# 정시 트리거용 예약함수 위치. (각 함수 파일의 export const config.schedule 로 시각 지정)
+#   trigger-intraday.mjs → 03:00 UTC(12:00 KST),  trigger-close.mjs → 06:40 UTC(15:40 KST)
+#   동작에 GH_DISPATCH_TOKEN(레포 Contents 권한 PAT) 환경변수가 Netlify 에 설정돼 있어야 함.
 [functions]
   directory = "netlify/functions"
+
+# 방문자 트래픽은 전부 GitHub Pages 로 전달(임시 302 — 추후 되돌리기 쉬움).
+[[redirects]]
+  from = "/*"
+  to = "https://andy-0401.github.io/kospi-ma-disparity/:splat"
+  status = 302
+  force = true
