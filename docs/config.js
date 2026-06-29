@@ -11,5 +11,5 @@
 window.SITE_CONFIG = {
   telegramUrl: "https://t.me/andyc14note",
   gaMeasurementId: "G-B8M3849G0G",
-  mddUrl: "https://kr-mdd.netlify.app/",
+  mddUrl: "https://andy-0401.github.io/kr-mdd/",
 };
