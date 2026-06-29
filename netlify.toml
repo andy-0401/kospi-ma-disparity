@@ -20,6 +20,13 @@
 [functions]
   directory = "netlify/functions"
 
+# MDD(시즌2) 단축 경로 — catch-all 보다 위에 둬야 먼저 매칭됨.
+[[redirects]]
+  from = "/kospimdd"
+  to = "https://andy-0401.github.io/kr-mdd/"
+  status = 302
+  force = true
+
 # 방문자 트래픽은 전부 GitHub Pages 로 전달(임시 302 — 추후 되돌리기 쉬움).
 [[redirects]]
   from = "/*"
