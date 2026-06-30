@@ -15,8 +15,9 @@
   ignore = "git diff --quiet HEAD^ HEAD -- netlify.toml"
 
 # 정시 트리거용 예약함수 위치. (각 함수 파일의 export const config.schedule 로 시각 지정)
-#   trigger-intraday.mjs → 03:00 UTC(12:00 KST),  trigger-close.mjs → 06:40 UTC(15:40 KST)
-#   동작에 GH_DISPATCH_TOKEN(레포 Contents 권한 PAT) 환경변수가 Netlify 에 설정돼 있어야 함.
+#   trigger-intraday.mjs → 03:00 UTC(12:00 KST) : 이격도 장중
+#   trigger-close.mjs    → 06:40 UTC(15:40 KST) : 이격도 종가 + MDD(kr-mdd) 종가 동시 트리거
+#   동작에 GH_DISPATCH_TOKEN(kospi-ma + kr-mdd Contents 권한 PAT) 환경변수가 Netlify 에 설정돼 있어야 함.
 [functions]
   directory = "netlify/functions"
 
