@@ -12,4 +12,6 @@ window.SITE_CONFIG = {
   telegramUrl: "https://t.me/andyc14note",
   gaMeasurementId: "G-B8M3849G0G",
   mddUrl: "https://andy-0401.github.io/kr-mdd/",
+  // 공유 버튼이 복사/공유할 '정식 주소'(github.io 대신 netlify 형태). 뒤에 공유 추적 태그가 붙음.
+  shareUrl: "https://kospi-ma.netlify.app",
 };
