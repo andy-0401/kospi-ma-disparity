@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>코스피·코스닥 50일 이격도 · 이그전 트래커</title>
-<meta name="description" content="이은택의 그림전략(이그전) 50일 이격도 이론에 기반한 코스피·코스닥 과열/과열해소 실시간 트래킹. MDD와 함께 조정 구간 판단. 매일 장중·종가 갱신." />
-<meta property="og:title" content="코스피·코스닥 50일 이격도 · 이그전 트래커" />
-<meta property="og:description" content="코스피·코스닥 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%) · MDD 동시 활용" />
+<title>코스피 50일 이격도 · 이그전 트래커</title>
+<meta name="description" content="이은택의 그림전략(이그전) 50일 이격도 이론에 기반한 코스피 과열/과열해소 실시간 트래킹. 매일 장중·종가 갱신." />
+<meta property="og:title" content="코스피 50일 이격도 · 이그전 트래커" />
+<meta property="og:description" content="코스피 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%)" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="stylesheet" href="./styles.css?v=20260630-10" />
+<link rel="stylesheet" href="./styles.css?v=20260710-11" />
 
 <!-- 사이트 설정 (채널 링크 / GA4 ID / MDD 데이터) -->
 <script src="./config.js"></script>
@@ -35,7 +35,7 @@
     <div class="brand">
       <span class="logo">📊</span>
       <div>
-        <h1>코스피·코스닥 50일 이격도</h1>
+        <h1>코스피 50일 이격도</h1>
         <p class="sub">이그전(이은택의 그림전략) 기반 과열 트래커</p>
       </div>
     </div>
@@ -66,7 +66,7 @@
 
   <!-- 이격도 게이지 (각 지수 자기 구간 기준) -->
   <section class="card gauge-card">
-    <div class="card-head"><h2>현재 이격도 위치 <span class="hint">각 지수 자기 구간 기준</span></h2></div>
+    <div class="card-head"><h2>현재 이격도 위치 <span class="hint">현재가 ÷ 50일선 × 100</span></h2></div>
     <div class="gauge-wrap">
       <div class="gauge-track eq">
         <div class="seg cooldown"></div>
@@ -75,7 +75,6 @@
         <div class="seg overheat"></div>
       </div>
       <div class="marker" id="mkKospi" hidden><span class="mlabel">코스피 <b id="mkKospiV"></b></span></div>
-      <div class="marker low" id="mkKosdaq" hidden><span class="mlabel">코스닥 <b id="mkKosdaqV"></b></span></div>
       <div class="gauge-ticks zone">
         <span class="zt" style="left:12.5%">과열해소</span>
         <span class="zt" style="left:37.5%">정상</span>
@@ -103,13 +102,7 @@
         <button data-r="1250">5Y</button>
       </div>
     </div>
-    <div class="series-row">
-      <div class="series-toggles" id="seriesToggles" role="group" aria-label="지수 선택">
-        <button class="series-toggle on" data-key="kospi"><i class="sw kospi"></i>코스피</button>
-        <button class="series-toggle on" data-key="kosdaq"><i class="sw kosdaq"></i>코스닥</button>
-      </div>
-      <span class="legend-hint">🔴 130 과열 · 🔵 105 과열해소</span>
-    </div>
+    <div class="legend-hint legend-row">🔴 130 과열 · 🔵 105 과열해소</div>
     <div class="chart-box"><canvas id="dispChart"></canvas></div>
     <p class="chart-hint">🔍 핀치·휠로 확대 · 드래그로 이동 · 더블탭으로 초기화</p>
   </section>
@@ -118,13 +111,12 @@
   <section class="card theory">
     <h2>이그전 50일 이격도 해석법</h2>
     <p><b>이격도 = 현재가 ÷ 50일 이동평균 × 100.</b> 현재 주가가 최근 50거래일 평균 대비 얼마나 위/아래에 있는지를 나타냅니다. 한국의 초강세장은 50일선을 지지받으며 상승하는 경향이 있습니다.</p>
-    <ul class="theory-list two">
-      <li><span class="tag overheat">과열권</span> <b class="lv">코스피 ≥130 · 코스닥 ≥124</b> 추격매수(Panic Buying) 자제</li>
-      <li><span class="tag caution">과열 경계</span> <b class="lv">코스피 120–130 · 코스닥 118–124</b> 분할·속도조절 관심</li>
-      <li><span class="tag normal">정상</span> <b class="lv">코스피 105–120 · 코스닥 106–118</b> 추세 추종 유효</li>
-      <li><span class="tag cooldown">과열 해소</span> <b class="lv">코스피 ≤105 · 코스닥 ≤106</b> 투매(Panic Selling) 자제, 이격조정 끝난 업종부터 매수</li>
+    <ul class="theory-list">
+      <li><span class="tag overheat">≥ 130%</span> 과열권 진입 — 추격매수(Panic Buying) 자제</li>
+      <li><span class="tag caution">120–130%</span> 과열 경계 — 분할·속도조절 관심</li>
+      <li><span class="tag normal">105–120%</span> 정상 범위 — 추세 추종 유효</li>
+      <li><span class="tag cooldown">≤ 105%</span> 과열 해소 — 투매(Panic Selling) 자제, 이격조정 끝난 업종부터 매수</li>
     </ul>
-    <p class="muted">※ 지수별 변동성 차이로 코스피·코스닥 기준선이 다릅니다(각 지수 자체 분포 기준).</p>
     <p><b>MDD와 함께 보기:</b> 이격도가 과열 해소되고 <a id="mddLink2" href="#" rel="noopener">MDD(고점대비 낙폭)</a>도 조정 구간으로 깊어졌다면 강세장 정상 조정의 분할매수 후보 구간입니다.</p>
     <p class="muted">※ 출처: <a href="https://blog.naver.com/egzion/224311644753" target="_blank" rel="noopener">이그전(이은택의 그림전략)</a>. 본 사이트는 정보 제공용이며 투자 권유가 아닙니다.</p>
   </section>
@@ -134,7 +126,7 @@
     <div class="card-head"><h2>최근 기록 <span class="hint">50일 이격도</span></h2></div>
     <div class="table-box">
       <table id="histTable">
-        <thead><tr><th>날짜</th><th>코스피</th><th>구간</th><th>코스닥</th><th>구간</th></tr></thead>
+        <thead><tr><th>날짜</th><th>코스피</th><th>50일선</th><th>이격도</th><th>구간</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -150,6 +142,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
-<script src="./app.js?v=20260630-10" defer></script>
+<script src="./app.js?v=20260710-11" defer></script>
 </body>
 </html>

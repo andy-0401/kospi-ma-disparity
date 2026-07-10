@@ -39,14 +39,11 @@
   }
 
   let dispChart, HISTORY = [];
-  const VIS = { kospi: true, kosdaq: true };
-  const SERIES_IDX = { kospi: 0, kosdaq: 1 };
 
   async function load() {
     wireTabs();
     wireTelegram();
     wireShare();
-    wireSeriesToggles();
     const [hist, latest] = await Promise.all([
       fetchJSON("./data/history.json"),
       fetchJSON("./data/latest.json"),
@@ -58,7 +55,7 @@
 
     $("updatedAt").textContent = `${latest.date} ${latest.type === "close" ? "15:40" : "12:00"} 기준`;
     checkStale(latest.date);
-    renderDualCards(latest);
+    renderCard(latest);
     renderGauge(latest);
 
     if (HISTORY.length) {
@@ -137,46 +134,26 @@
     l.addEventListener("click", () => track("telegram_click", { url }));
   }
 
-  function wireSeriesToggles() {
-    const box = $("seriesToggles");
-    if (!box) return;
-    box.addEventListener("click", (e) => {
-      const b = e.target.closest(".series-toggle");
-      if (!b) return;
-      const key = b.dataset.key;
-      VIS[key] = !VIS[key];
-      b.classList.toggle("on", VIS[key]);
-      if (dispChart) {
-        dispChart.setDatasetVisibility(SERIES_IDX[key], VIS[key]);
-        dispChart.update();
-      }
-      track("series_toggle", { key, on: VIS[key] });
-    });
-  }
-
-  function renderDualCards(latest) {
-    const order = ["kospi", "kosdaq"];
-    $("dualCards").innerHTML = order.map((key) => {
-      const idx = latest.indices[key];
-      if (!idx) return "";
-      const [zk, zl] = dispZone(idx.disparity, key);
-      const up = idx.change > 0, dn = idx.change < 0;
-      const chg = idx.change == null ? "" :
-        `${up ? "▲" : dn ? "▼" : "—"} ${fmt(Math.abs(idx.change))} (${signed(idx.change_pct)}%)`;
-      const delta = idx.prev_disparity != null
-        ? `직전 대비 ${signed(+(idx.disparity - idx.prev_disparity).toFixed(2), 2)}p` : "";
-      return `<div class="idx-card">
-        <div class="idx-head">
-          <div class="idx-name"><span class="dot ${key}"></span>${idx.name}</div>
-          <div class="idx-price">${fmt(idx.price)}<span class="chg ${up ? "up" : dn ? "down" : ""}">${chg}</span></div>
-        </div>
+  function renderCard(latest) {
+    const idx = latest.indices.kospi;
+    if (!idx) { emptyState(); return; }
+    const [zk, zl] = dispZone(idx.disparity, "kospi");
+    const up = idx.change > 0, dn = idx.change < 0;
+    const chg = idx.change == null ? "" :
+      `<span class="chg ${up ? "up" : dn ? "down" : ""}">${up ? "▲" : dn ? "▼" : "—"} ${fmt(Math.abs(idx.change))} (${signed(idx.change_pct)}%)</span>`;
+    const delta = idx.prev_disparity != null
+      ? `직전 대비 ${signed(+(idx.disparity - idx.prev_disparity).toFixed(2), 2)}p` : "";
+    $("dualCards").innerHTML = `<div class="idx-card solo">
+      <div class="solo-main">
+        <div class="idx-name"><span class="dot kospi"></span>${idx.name}</div>
         <div class="dd-big dz-${zk}">${fmt(idx.disparity, 1)}<span class="pct">%</span></div>
         <div class="idx-zone dz-${zk}">${zl}<span class="zsub">${delta}</span></div>
-        <div class="idx-stats">
-          <div class="row"><span class="k">50일 이동평균</span><span class="v">${fmt(idx.ma50)}</span></div>
-        </div>
-      </div>`;
-    }).join("");
+      </div>
+      <div class="idx-stats">
+        <div class="row"><span class="k">현재가</span><span class="v">${fmt(idx.price)} ${chg}</span></div>
+        <div class="row"><span class="k">50일 이동평균</span><span class="v">${fmt(idx.ma50)}</span></div>
+      </div>
+    </div>`;
   }
 
   // 게이지 위치: 각 지수의 '자기 구간(zone)' 안 위치(0~100%). 좌(해소)→우(과열), 동일폭 25% 세그먼트.
@@ -200,7 +177,6 @@
       $(vId).textContent = `${fmt(data.disparity, 1)}%`;
     };
     place("kospi", "mkKospi", "mkKospiV");
-    place("kosdaq", "mkKosdaq", "mkKosdaqV");
   }
 
   function emptyState() {
@@ -216,21 +192,20 @@
     const labels = data.map((d) => d.date);
     const ctx = $("dispChart");
     if (dispChart) dispChart.destroy();
-    const line = (key, color) => ({
-      label: key === "kospi" ? "코스피" : "코스닥",
-      data: data.map((d) => d[key + "_disp"]),
-      borderColor: color, borderWidth: 1.7, pointRadius: 0, tension: 0.15, fill: false,
-      hidden: !VIS[key],
+    const line = (color) => ({
+      label: "코스피",
+      data: data.map((d) => d.kospi_disp),
+      borderColor: color, borderWidth: 1.8, pointRadius: 0, tension: 0.15, fill: false,
     });
     const ref = (y, color) => ({
       label: "", data: labels.map(() => y), borderColor: color,
       borderWidth: 1, borderDash: [4, 4], pointRadius: 0, fill: false,
     });
-    const allVals = data.flatMap((d) => [d.kospi_disp, d.kosdaq_disp]).filter((v) => v != null);
+    const allVals = data.map((d) => d.kospi_disp).filter((v) => v != null);
     dispChart = new Chart(ctx, {
       type: "line",
       data: { labels, datasets: [
-        line("kospi", css("--kospi")), line("kosdaq", css("--kosdaq")),
+        line(css("--kospi")),
         ref(THRESH.kospi.disp.overheat, css("--overheat")), ref(THRESH.kospi.disp.cooldown, css("--cooldown")),
       ] },
       options: {
@@ -287,14 +262,12 @@
     const rows = HISTORY.slice(-30).reverse();
     tb.innerHTML = rows.map((d) => {
       const [kz, kl] = dispZone(d.kospi_disp, "kospi");
-      const hasKq = d.kosdaq_disp != null;
-      const [qz, ql] = hasKq ? dispZone(d.kosdaq_disp, "kosdaq") : ["", "—"];
       return `<tr>
         <td class="c-date">${d.date}</td>
-        <td class="c-kospi"><b>${fmt(d.kospi_disp, 1)}%</b></td>
-        <td class="c-kzone"><span class="pill ${kz}">${kl}</span></td>
-        <td class="c-kosdaq"><b>${hasKq ? fmt(d.kosdaq_disp, 1) + "%" : "—"}</b></td>
-        <td class="c-dzone">${hasKq ? `<span class="pill ${qz}">${ql}</span>` : ""}</td>
+        <td class="c-kospi">${fmt(d.kospi_close)}</td>
+        <td class="c-ma50">${fmt(d.kospi_ma50)}</td>
+        <td class="c-disp"><b>${fmt(d.kospi_disp, 1)}%</b></td>
+        <td class="c-zone"><span class="pill ${kz}">${kl}</span></td>
       </tr>`;
     }).join("");
   }
