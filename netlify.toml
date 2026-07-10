@@ -21,6 +21,13 @@
 [functions]
   directory = "netlify/functions"
 
+# MDD(시즌2) 텔레그램 유입 추적 경로(utm) — 더 구체적이라 /kospimdd 보다 위.
+[[redirects]]
+  from = "/kospimdd/telegram"
+  to = "https://andy-0401.github.io/kr-mdd/?utm_source=telegram&utm_medium=channel"
+  status = 302
+  force = true
+
 # MDD(시즌2) 단축 경로 — catch-all 보다 위에 둬야 먼저 매칭됨.
 [[redirects]]
   from = "/kospimdd"
