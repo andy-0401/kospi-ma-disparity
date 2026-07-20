@@ -5,8 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>코스피 50일 이격도 · 이그전 트래커</title>
 <meta name="description" content="이은택의 그림전략(이그전) 50일 이격도 이론에 기반한 코스피 과열/과열해소 실시간 트래킹. 매일 장중·종가 갱신." />
+<link rel="canonical" href="https://andy-0401.github.io/kospi-ma-disparity/" />
+<meta name="author" content="CHO투자노트" />
+<meta name="keywords" content="코스피 이격도, 코스피 50일 이격도, 이격도 계산법, 코스피 과열, 이그전, 이은택 그림전략, 코스피 이동평균, 이격도 트래커" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="이그전 트래커" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:url" content="https://andy-0401.github.io/kospi-ma-disparity/" />
 <meta property="og:title" content="코스피 50일 이격도 · 이그전 트래커" />
 <meta property="og:description" content="코스피 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%)" />
+<meta property="og:image" content="https://andy-0401.github.io/kospi-ma-disparity/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="코스피 50일 이격도 이그전 트래커" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="코스피 50일 이격도 · 이그전 트래커" />
+<meta name="twitter:description" content="코스피 50일 이동평균 이격도 실시간 트래킹 (과열 ≥130% / 해소 ≤105%)" />
+<meta name="twitter:image" content="https://andy-0401.github.io/kospi-ma-disparity/og.png" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="./styles.css?v=20260710-11" />
 
@@ -27,6 +42,47 @@
   window.gtag("js", new Date());
   window.gtag("config", id, { anonymize_ip: true });
 })();
+</script>
+
+<!-- 구조화 데이터: 검색엔진용 (앱 정보 + FAQ 리치결과) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "코스피 50일 이격도 · 이그전 트래커",
+      "url": "https://andy-0401.github.io/kospi-ma-disparity/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "ko-KR",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+      "description": "이은택의 그림전략(이그전) 50일 이격도 이론에 기반한 코스피·코스닥 과열/과열해소 실시간 트래킹. 매 거래일 장중·종가 자동 갱신.",
+      "author": { "@type": "Person", "name": "CHO투자노트" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "50일 이격도란 무엇인가요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "이격도 = 현재가 ÷ 50일 이동평균 × 100. 현재 주가가 최근 50거래일 평균 대비 얼마나 위/아래에 있는지를 나타내는 지표입니다. 한국의 강세장은 50일선을 지지받으며 상승하는 경향이 있습니다." }
+        },
+        {
+          "@type": "Question",
+          "name": "이격도 과열·과열해소 기준은 몇 %인가요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "이그전 기준으로 130% 이상은 과열권(추격매수 자제), 120~130%는 과열 경계, 105~120%는 정상 범위, 105% 이하는 과열 해소 구간으로 봅니다." }
+        },
+        {
+          "@type": "Question",
+          "name": "이격도 수치는 얼마나 자주 갱신되나요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "매 거래일 12:00(장중)과 15:40(종가) KST에 KRX·네이버·야후 등 무료 공개 데이터로 자동 갱신됩니다." }
+        }
+      ]
+    }
+  ]
+}
 </script>
 </head>
 <body>
