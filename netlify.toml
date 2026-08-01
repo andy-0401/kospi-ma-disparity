@@ -25,19 +25,21 @@
 [[redirects]]
   from = "/kospimdd/telegram"
   to = "https://andy-0401.github.io/kr-mdd/?utm_source=telegram&utm_medium=channel"
-  status = 302
+  status = 301
   force = true
 
 # MDD(시즌2) 단축 경로 — catch-all 보다 위에 둬야 먼저 매칭됨.
 [[redirects]]
   from = "/kospimdd"
   to = "https://andy-0401.github.io/kr-mdd/"
-  status = 302
+  status = 301
   force = true
 
-# 방문자 트래픽은 전부 GitHub Pages 로 전달(임시 302 — 추후 되돌리기 쉬움).
+# 방문자 트래픽은 전부 GitHub Pages 로 전달(301 영구 — 검색엔진이 github.io 를 표준 URL 로 합치도록).
+#   ※ 이전엔 302(임시)였으나, 구글이 netlify.app 을 canonical 로 잘못 선택하는 문제로 301 전환(2026-08).
+#     사람이 클릭할 때 동작은 302 와 동일(그대로 리다이렉트). 검색엔진 신호만 github.io 로 통합됨.
 [[redirects]]
   from = "/*"
   to = "https://andy-0401.github.io/kospi-ma-disparity/:splat"
-  status = 302
+  status = 301
   force = true
