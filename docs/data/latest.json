@@ -34,9 +34,9 @@
       "dd_ath": -29.95,
       "zone": "breach",
       "zone_label": "경계 (경기둔화 가능성)",
-      "ma50": 868.13,
-      "disparity": 98.94,
-      "prev_disparity": 98.33,
+      "ma50": 861.52,
+      "disparity": 99.7,
+      "prev_disparity": 99.13,
       "disp_zone": "cooldown"
     }
   },
