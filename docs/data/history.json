@@ -13162,11 +13162,7 @@
 "kospi_close":6345.53,
 "kospi_dd":-30.38,
 "kospi_ma50":7525.43,
-"kospi_disp":84.32,
-"kosdaq_close":857.84,
-"kosdaq_dd":-30.04,
-"kosdaq_ma50":865.34,
-"kosdaq_disp":99.13
+"kospi_disp":84.32
 },
 {
 "date":"2026-08-12",
@@ -13176,8 +13172,8 @@
 "kospi_disp":87.94,
 "kosdaq_close":858.91,
 "kosdaq_dd":-29.95,
-"kosdaq_ma50":861.52,
-"kosdaq_disp":99.7
+"kosdaq_ma50":865.36,
+"kosdaq_disp":99.25
 },
 {
 "date":"2026-08-13",
@@ -13187,8 +13183,8 @@
 "kospi_disp":91.56,
 "kosdaq_close":861.37,
 "kosdaq_dd":-29.75,
-"kosdaq_ma50":858.23,
-"kosdaq_disp":100.37
+"kosdaq_ma50":861.59,
+"kosdaq_disp":99.97
 },
 {
 "date":"2026-08-14",
@@ -13198,8 +13194,8 @@
 "kospi_disp":94.19,
 "kosdaq_close":864.65,
 "kosdaq_dd":-29.48,
-"kosdaq_ma50":854.53,
-"kosdaq_disp":101.18
+"kosdaq_ma50":858.36,
+"kosdaq_disp":100.73
 },
 {
 "date":"2026-08-18",
@@ -13209,8 +13205,8 @@
 "kospi_disp":93.06,
 "kosdaq_close":834.2,
 "kosdaq_dd":-31.97,
-"kosdaq_ma50":851.16,
-"kosdaq_disp":98.01
+"kosdaq_ma50":854.05,
+"kosdaq_disp":97.68
 },
 {
 "date":"2026-08-19",
@@ -13220,7 +13216,7 @@
 "kospi_disp":87.9,
 "kosdaq_close":824.46,
 "kosdaq_dd":-32.76,
-"kosdaq_ma50":849.42,
-"kosdaq_disp":97.06
+"kosdaq_ma50":850.49,
+"kosdaq_disp":96.94
 }
 ]
