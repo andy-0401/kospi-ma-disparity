@@ -1,16 +1,16 @@
 {
   "date": "2026-09-02",
-  "time": "12:00",
-  "type": "intraday",
-  "note": "정규장 중 실시간 현재가 기준 추정치입니다(종가 확정 시 갱신).",
-  "updated_at": "2026-09-02T12:00:00+09:00",
+  "time": "15:40",
+  "type": "close",
+  "note": "장 마감 종가 기준 확정값입니다.",
+  "updated_at": "2026-09-02T15:40:00+09:00",
   "indices": {
     "kospi": {
       "key": "kospi",
       "name": "코스피",
       "price": 6562.72,
-      "change": -0.0,
-      "change_pct": -0.0,
+      "change": -273.08,
+      "change_pct": -3.99,
       "high_52w": 9114.55,
       "dd52": -28.0,
       "ath": 9114.55,
@@ -19,15 +19,15 @@
       "zone_label": "경계 (경기둔화 가능성)",
       "ma50": 7019.18,
       "disparity": 93.5,
-      "prev_disparity": 93.5,
+      "prev_disparity": 96.68,
       "disp_zone": "cooldown"
     },
     "kosdaq": {
       "key": "kosdaq",
       "name": "코스닥",
       "price": 803.98,
-      "change": 0.0,
-      "change_pct": 0.0,
+      "change": -17.27,
+      "change_pct": -2.1,
       "high_52w": 1226.18,
       "dd52": -34.43,
       "ath": 1226.18,
@@ -36,7 +36,7 @@
       "zone_label": "경계 (경기둔화 가능성)",
       "ma50": 815.02,
       "disparity": 98.65,
-      "prev_disparity": 98.65,
+      "prev_disparity": 100.36,
       "disp_zone": "cooldown"
     }
   },
