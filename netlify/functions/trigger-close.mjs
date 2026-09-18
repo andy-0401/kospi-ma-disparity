@@ -2,9 +2,11 @@
 // GitHub 무료 cron 지연/누락을 우회해 정시성 확보. (각 워크플로의 repository_dispatch[close] 사용)
 //   - 이격도(kospi-ma): 12:00 + 15:40  (장중 함수는 trigger-intraday.mjs)
 //   - MDD(kr-mdd)     : 15:40 종가 1회 (← 여기서 같이 깨움)
-// 필요한 환경변수: GH_DISPATCH_TOKEN — 아래 두 repo의 Contents: Read/write 권한 필요.
-//   (fine-grained PAT면 kr-mdd 도 포함시켜야 함. classic repo 토큰이면 자동 포함.)
-const REPOS = ["andy-0401/kospi-ma-disparity", "andy-0401/kr-mdd"];
+//   - 괴리율(kr-pref-spread): 15:40 종가 1회 (← 여기서 같이 깨움)
+// 필요한 환경변수: GH_DISPATCH_TOKEN — 아래 세 repo의 Contents: Read/write 권한 필요.
+//   (fine-grained PAT면 kr-mdd·kr-pref-spread 도 Repository access 에 포함시켜야 함.
+//    빠지면 그 레포만 403 이 되고 나머지는 정상 동작한다. classic repo 토큰이면 자동 포함.)
+const REPOS = ["andy-0401/kospi-ma-disparity", "andy-0401/kr-mdd", "andy-0401/kr-pref-spread"];
 
 export default async () => {
   const token = process.env.GH_DISPATCH_TOKEN;

@@ -35,6 +35,13 @@
   status = 301
   force = true
 
+# 괴리율(시즌3) 단축 경로 — catch-all 보다 위에 둬야 먼저 매칭됨.
+[[redirects]]
+  from = "/kospipref"
+  to = "https://andy-0401.github.io/kr-pref-spread/"
+  status = 301
+  force = true
+
 # 방문자 트래픽은 전부 GitHub Pages 로 전달(301 영구 — 검색엔진이 github.io 를 표준 URL 로 합치도록).
 #   ※ 이전엔 302(임시)였으나, 구글이 netlify.app 을 canonical 로 잘못 선택하는 문제로 301 전환(2026-08).
 #     사람이 클릭할 때 동작은 302 와 동일(그대로 리다이렉트). 검색엔진 신호만 github.io 로 통합됨.

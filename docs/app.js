@@ -113,15 +113,18 @@
   }
 
   function wireTabs() {
-    const url = CFG.mddUrl || "";
-    if (!url) return;
     const join = (u) => u + (u.includes("?") ? "&" : "?") + "utm_source=disparity&utm_medium=tab";
-    ["mddTab", "mddLink2"].forEach((id) => {
-      const el = $(id);
-      if (!el) return;
-      el.href = join(url);
-      el.addEventListener("click", () => track("mdd_click", { from: id }));
-    });
+    const wire = (url, ids, ev) => {
+      if (!url) return;
+      ids.forEach((id) => {
+        const el = $(id);
+        if (!el) return;
+        el.href = join(url);
+        el.addEventListener("click", () => track(ev, { from: id }));
+      });
+    };
+    wire(CFG.mddUrl || "", ["mddTab", "mddLink2", "mddLinkFaq"], "mdd_click");
+    wire(CFG.prefUrl || "", ["prefTab", "prefLink2"], "pref_click");
   }
 
   function wireTelegram() {
